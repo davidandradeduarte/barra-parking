@@ -12,15 +12,10 @@
 <body>
     <div id="map" class="map"></div>
 
-
     <script>
-
         var Parking = {
-
             Projection: 'EPSG:4326',
-
             GetRoute: function () {
-
                 var geojsonObject2 = {
                     "type": "LineString",
                     "crs": {
@@ -40,10 +35,9 @@
                         }
                 };
 
-
                 //console.log(geojsonObject.coordinates);
-                var routeGeom = new ol.geom.LineString(geojsonObject2.coordinates);
-                var routeFeature = new ol.Feature({
+                var routeGeom = new ol.geom.LineString(geojsonObject2.coordinates),
+                 routeFeature = new ol.Feature({
                     geometry: routeGeom
                 });
                 //var extentToZoom = routeGeom.getExtent();
@@ -61,11 +55,7 @@
                 return vectorLayer;
             },
 
-
-
             GetParkingsAndAreas: function () {
-
-
                 //geojson that gives parkings and areas
                 var geojsonObject = {
                     "type": "FeatureCollection",
@@ -471,7 +461,6 @@
                     ]
                 }
 
-
                 var vectorSource = new ol.source.Vector({
                     features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
                 });
@@ -487,7 +476,6 @@
             },
 
             GetCurrentLocation: function () {
-
                 var geolocation = new ol.Geolocation({
                     projection: Parking.Projection
                 });
@@ -542,18 +530,15 @@
                 return vectorLayer;
             },
 
-
-
             MAP: function (Layer_ParkingAndAreas, Layer_Routes, Layer_CurrentLocation) {
 
                 var viewGeneric = new ol.View({
                     projection: Parking.Projection,
                     center: [-8.74703452, 40.63910304],
                     zoom: 16
-                });
-
-
-                var map2 = new ol.Map({
+                }),
+                
+                 map2 = new ol.Map({
                     layers: [
                         new ol.layer.Tile({
                             source: new ol.source.OSM()
@@ -573,17 +558,14 @@
 
             },
 
-
             StylesGeneric: function () {
 
                 var image = new ol.style.Circle({
                     radius: 5,
                     fill: null,
                     stroke: new ol.style.Stroke({ color: 'red', width: 1 })
-                });
-
-
-                var styles = {
+                }),
+                styles = {
                     'Point': new ol.style.Style({
                         image: image
                     }),
@@ -655,23 +637,12 @@
                 return styleFunction;
             },
 
-
             init: function () {
-
                 Parking.MAP(Parking.GetParkingsAndAreas(), Parking.GetRoute(), Parking.GetCurrentLocation());
-
             }
-
         };
-
-
         Parking.init();
 
-
     </script>
-
-
-
 </body>
-
 </html>
