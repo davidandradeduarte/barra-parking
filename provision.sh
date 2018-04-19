@@ -234,7 +234,7 @@ CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
                                   LC_CTYPE='en_US.utf8'
                                   ENCODING='UTF8'
                                   TEMPLATE=template0;
-
+\c $APP_DB_NAME;
 CREATE TABLE public.test_table
 (
     test_column text
@@ -248,7 +248,7 @@ ALTER TABLE public.test_table
 
 INSERT INTO public.test_table(
 	test_column)
-	VALUES ('this is a test');
+	VALUES ('this is a second test');
 EOF
 
 # Tag the provision time:
