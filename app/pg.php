@@ -1,5 +1,5 @@
 <?php
-    $db_connection = pg_connect("host=localhost dbname=myapp user=myapp password=dbpass");
+    $db_connection = pg_connect("host=localhost dbname=barra_parking user=root password=root");
     $result = pg_query($db_connection, "SELECT test_column FROM test_table");
 
     if (!$result) {
@@ -8,7 +8,7 @@
     }
     
     while ($row = pg_fetch_row($result)) {
-      echo "Quem e o maior? $row[0]";
+      echo "Is the db working? $row[0]";
       echo "<br />\n";
     }
 

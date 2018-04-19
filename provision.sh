@@ -7,8 +7,12 @@ xdebug_config_file="/etc/php5/mods-available/xdebug.ini"
 mysql_config_file="/etc/mysql/my.cnf"
 default_apache_index="/var/www/html/index.html"
 project_web_root="app"
-POSTGRE_VERSION=9.3
-PASSWORD='root'
+#PASSWORD='root'
+DB_USER=root
+DB_PASS=root
+DB_NAME=barra_parking
+SPATIAL_DB_NAME=spatial_barra_parking
+PG_VERSION=9.4
 
 # This function is called at the very bottom of the file
 main() {
@@ -18,6 +22,7 @@ main() {
 	tools_go
 	apache_go
 	#mysql_go
+	postgres_go
 	php_go
 	autoremove_go
 }
@@ -141,122 +146,161 @@ mysql_go() {
 	update-rc.d apache2 enable
 }
 
-#!/bin/sh -e
+postgres_go() {
+	export DEBIAN_FRONTEND=noninteractive
 
-# Edit the following to change the name of the database user that will be created:
-APP_DB_USER=myapp
-APP_DB_PASS=dbpass
+	PROVISIONED_ON=/etc/vm_provision_on_timestamp
+	if [ -f "$PROVISIONED_ON" ]
+	then
+	echo "VM was already provisioned at: $(cat $PROVISIONED_ON)"
+	echo "To run system updates manually login via 'vagrant ssh' and run 'apt-get update && apt-get upgrade'"
+	echo ""
+	print_db_usage
+	exit
+	fi
 
-# Edit the following to change the name of the database that is created (defaults to the user name)
-APP_DB_NAME=$APP_DB_USER
+	PG_REPO_APT_SOURCE=/etc/apt/sources.list.d/pgdg.list
+	if [ ! -f "$PG_REPO_APT_SOURCE" ]
+	then
+	# Add PG apt repo:
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > "$PG_REPO_APT_SOURCE"
 
-# Edit the following to change the version of PostgreSQL that is installed
-PG_VERSION=9.4
+	# Add PGDG repo key:
+	wget --quiet -O - https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
+	fi
 
-###########################################################
-# Changes below this line are probably not necessary
-###########################################################
-print_db_usage () {
-  echo "Your PostgreSQL database has been setup and can be accessed on your local machine on the forwarded port (default: 15432)"
-  echo "  Host: localhost"
-  echo "  Port: 15432"
-  echo "  Database: $APP_DB_NAME"
-  echo "  Username: $APP_DB_USER"
-  echo "  Password: $APP_DB_PASS"
-  echo ""
-  echo "Admin access to postgres user via VM:"
-  echo "  vagrant ssh"
-  echo "  sudo su - postgres"
-  echo ""
-  echo "psql access to app database user via VM:"
-  echo "  vagrant ssh"
-  echo "  sudo su - postgres"
-  echo "  PGUSER=$APP_DB_USER PGPASSWORD=$APP_DB_PASS psql -h localhost $APP_DB_NAME"
-  echo ""
-  echo "Env variable for application development:"
-  echo "  DATABASE_URL=postgresql://$APP_DB_USER:$APP_DB_PASS@localhost:15432/$APP_DB_NAME"
-  echo ""
-  echo "Local command to access the database via psql:"
-  echo "  PGUSER=$APP_DB_USER PGPASSWORD=$APP_DB_PASS psql -h localhost -p 15432 $APP_DB_NAME"
-}
+	# Update package list and upgrade all packages
+	apt-get update
+	apt-get -y upgrade
 
-export DEBIAN_FRONTEND=noninteractive
+	apt-get -y install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION" postgresql-$PG_VERSION-postgis-2.1 -f
 
-PROVISIONED_ON=/etc/vm_provision_on_timestamp
-if [ -f "$PROVISIONED_ON" ]
-then
-  echo "VM was already provisioned at: $(cat $PROVISIONED_ON)"
-  echo "To run system updates manually login via 'vagrant ssh' and run 'apt-get update && apt-get upgrade'"
-  echo ""
-  print_db_usage
-  exit
-fi
+	PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
+	PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
+	PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 
-PG_REPO_APT_SOURCE=/etc/apt/sources.list.d/pgdg.list
-if [ ! -f "$PG_REPO_APT_SOURCE" ]
-then
-  # Add PG apt repo:
-  echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > "$PG_REPO_APT_SOURCE"
+	# Edit postgresql.conf to change listen address to '*':
+	sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 
-  # Add PGDG repo key:
-  wget --quiet -O - https://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
-fi
+	# Append to pg_hba.conf to add password auth:
+	echo "host    all             all             all                     md5" >> "$PG_HBA"
 
-# Update package list and upgrade all packages
-apt-get update
-apt-get -y upgrade
+	# Explicitly set default client_encoding
+	echo "client_encoding = utf8" >> "$PG_CONF"
 
-apt-get -y install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION"
+	# Restart so that all new config is loaded:
+	service postgresql restart
 
-PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
-PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
-PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
+	cat << EOF | su - postgres -c psql
 
-# Edit postgresql.conf to change listen address to '*':
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
+	-- Create the database user:
+	CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';
 
-# Append to pg_hba.conf to add password auth:
-echo "host    all             all             all                     md5" >> "$PG_HBA"
+	-- Create the database:
+	CREATE DATABASE $DB_NAME WITH OWNER=$DB_USER
+									LC_COLLATE='en_US.utf8'
+									LC_CTYPE='en_US.utf8'
+									ENCODING='UTF8'
+									TEMPLATE=template0;
+									
+	CREATE DATABASE $SPATIAL_DB_NAME WITH OWNER=$DB_USER
+									LC_COLLATE='en_US.utf8'
+									LC_CTYPE='en_US.utf8'
+									ENCODING='UTF8'
+									TEMPLATE=template0;
 
-# Explicitly set default client_encoding
-echo "client_encoding = utf8" >> "$PG_CONF"
+	\c $SPATIAL_DB_NAME;
 
-# Restart so that all new config is loaded:
-service postgresql restart
+	-- Enable postgis extension
+	CREATE EXTENSION postgis;
 
-cat << EOF | su - postgres -c psql
--- Create the database user:
-CREATE USER $APP_DB_USER WITH PASSWORD '$APP_DB_PASS';
+	-- Table: public.areas
+	-- DROP TABLE public.areas;
+	CREATE TABLE public.areas
+	(
+		id bigint NOT NULL,
+		geom geometry(MultiPolygon,4326),
+		CONSTRAINT areas_pkey PRIMARY KEY (id)
+	)
+	WITH (
+		OIDS=FALSE
+	);
+	ALTER TABLE public.areas
+	OWNER TO $DB_USER;
 
--- Create the database:
-CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
-                                  LC_COLLATE='en_US.utf8'
-                                  LC_CTYPE='en_US.utf8'
-                                  ENCODING='UTF8'
-                                  TEMPLATE=template0;
-\c $APP_DB_NAME;
-CREATE TABLE public.test_table
-(
-    test_column text
-)
-WITH (
-    OIDS = FALSE
-);
+	-- Index: public.sidx_areas_geom
+	-- DROP INDEX public.sidx_areas_geom;
+	CREATE INDEX sidx_areas_geom
+	ON public.areas
+	USING gist
+	(geom);
 
-ALTER TABLE public.test_table
-    OWNER to myapp;
+	-- Table: public.pontos
+	-- DROP TABLE public.pontos;
+	CREATE TABLE public.pontos
+	(
+		id bigint NOT NULL,
+		geom geometry(MultiPoint,4326),
+		estado integer,
+		x bigint,
+		y bigint,
+		CONSTRAINT pontos_pkey PRIMARY KEY (id)
+	)
+	WITH (
+		OIDS=FALSE
+	);
+	ALTER TABLE public.pontos
+	OWNER TO $DB_USER;
 
-INSERT INTO public.test_table(
-	test_column)
-	VALUES ('this is a second test');
+	-- Index: public.sidx_pontos_geom
+	-- DROP INDEX public.sidx_pontos_geom;
+	CREATE INDEX sidx_pontos_geom
+	ON public.pontos
+	USING gist
+	(geom);
+
+	-- Table: public.spatial_ref_sys
+	-- DROP TABLE public.spatial_ref_sys;
+	CREATE TABLE public.spatial_ref_sys
+	(
+		srid integer NOT NULL,
+		auth_name character varying(256),
+		auth_srid integer,
+		srtext character varying(2048),
+		proj4text character varying(2048),
+		CONSTRAINT spatial_ref_sys_pkey PRIMARY KEY (srid),
+		CONSTRAINT spatial_ref_sys_srid_check CHECK (srid > 0 AND srid <= 998999)
+	)
+	WITH (
+		OIDS=FALSE
+	);
+	ALTER TABLE public.spatial_ref_sys
+	OWNER TO $DB_USER;
+	GRANT ALL ON TABLE public.spatial_ref_sys TO $DB_USER;
+	GRANT SELECT ON TABLE public.spatial_ref_sys TO public;
+	
+	\c $DB_NAME;
+
+	-- Table: public.test_table
+	-- DROP TABLE public.test_table;
+	CREATE TABLE public.test_table
+	(
+		test_column text
+	)
+	WITH (
+		OIDS=FALSE
+	);
+	ALTER TABLE public.test_table
+	OWNER TO $DB_USER;
+
+	INSERT INTO public.test_table(
+            test_column)
+    VALUES ('yes');
 EOF
 
-# Tag the provision time:
-date > "$PROVISIONED_ON"
-
-echo "Successfully created PostgreSQL dev virtual machine."
-echo ""
-print_db_usage
+	# Tag the provision time:
+	date > "$PROVISIONED_ON"
+}
 
 main
 
