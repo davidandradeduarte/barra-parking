@@ -234,6 +234,21 @@ CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
                                   LC_CTYPE='en_US.utf8'
                                   ENCODING='UTF8'
                                   TEMPLATE=template0;
+
+CREATE TABLE public.test_table
+(
+    test_column text
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.test_table
+    OWNER to myapp;
+
+INSERT INTO public.test_table(
+	test_column)
+	VALUES ('this is a test');
 EOF
 
 # Tag the provision time:
