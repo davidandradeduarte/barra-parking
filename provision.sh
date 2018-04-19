@@ -214,9 +214,9 @@ postgres_go() {
 	-- Enable postgis extension
 	CREATE EXTENSION postgis;
 
-	-- Table: public.areas
-	-- DROP TABLE public.areas;
-	CREATE TABLE public.areas
+	-- Table: public.parking_areas
+	-- DROP TABLE public.parking_areas;
+	CREATE TABLE public.parking_areas
 	(
 		id bigint NOT NULL,
 		geom geometry(MultiPolygon,4326),
@@ -225,37 +225,37 @@ postgres_go() {
 	WITH (
 		OIDS=FALSE
 	);
-	ALTER TABLE public.areas
+	ALTER TABLE public.parking_areas
 	OWNER TO $DB_USER;
 
 	-- Index: public.sidx_areas_geom
 	-- DROP INDEX public.sidx_areas_geom;
 	CREATE INDEX sidx_areas_geom
-	ON public.areas
+	ON public.parking_areas
 	USING gist
 	(geom);
 
-	-- Table: public.pontos
-	-- DROP TABLE public.pontos;
-	CREATE TABLE public.pontos
+	-- Table: public.parking_places
+	-- DROP TABLE public.parking_places;
+	CREATE TABLE public.parking_places
 	(
 		id bigint NOT NULL,
 		geom geometry(MultiPoint,4326),
 		estado integer,
 		x bigint,
 		y bigint,
-		CONSTRAINT pontos_pkey PRIMARY KEY (id)
+		CONSTRAINT parking_places_pkey PRIMARY KEY (id)
 	)
 	WITH (
 		OIDS=FALSE
 	);
-	ALTER TABLE public.pontos
+	ALTER TABLE public.parking_places
 	OWNER TO $DB_USER;
 
-	-- Index: public.sidx_pontos_geom
-	-- DROP INDEX public.sidx_pontos_geom;
-	CREATE INDEX sidx_pontos_geom
-	ON public.pontos
+	-- Index: public.sidx_parking_places_geom
+	-- DROP INDEX public.sidx_parking_places_geom;
+	CREATE INDEX sidx_parking_places_geom
+	ON public.parking_places
 	USING gist
 	(geom);
 
