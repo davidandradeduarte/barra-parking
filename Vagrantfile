@@ -12,9 +12,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #config.vm.network "forwarded_port", guest: 3306, host: 8889
     config.vm.network "forwarded_port", guest: 5432, host: 15432
 
-
-  config.vm.provision "shell", path: "provision/configure-vm.sh"
-  config.vm.provision "shell", path: "provision/sql-dump.sh"
+    config.vm.provision "shell", path: "provision/configure-vm.sh"
+    config.vm.provision "shell", path: "provision/sql-dump.sh"
 
   # config.vm.provider "virtualbox" do |vb|
   #   # Don't boot with headless mode
