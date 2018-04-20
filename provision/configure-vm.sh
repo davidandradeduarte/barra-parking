@@ -7,11 +7,6 @@ xdebug_config_file="/etc/php5/mods-available/xdebug.ini"
 mysql_config_file="/etc/mysql/my.cnf"
 default_apache_index="/var/www/html/index.html"
 project_web_root="app"
-#PASSWORD='root'
-DB_USER=root
-DB_PASS=root
-DB_NAME=barra_parking
-SPATIAL_DB_NAME=spatial_barra_parking
 PG_VERSION=9.4
 
 # This function is called at the very bottom of the file
@@ -152,11 +147,8 @@ postgres_go() {
 	PROVISIONED_ON=/etc/vm_provision_on_timestamp
 	if [ -f "$PROVISIONED_ON" ]
 	then
-	echo "VM was already provisioned at: $(cat $PROVISIONED_ON)"
-	echo "To run system updates manually login via 'vagrant ssh' and run 'apt-get update && apt-get upgrade'"
-	echo ""
-	print_db_usage
-	exit
+		echo "VM was already provisioned at: $(cat $PROVISIONED_ON)"
+		echo "To run system updates manually login via 'vagrant ssh' and run 'apt-get update && apt-get upgrade'"
 	fi
 
 	PG_REPO_APT_SOURCE=/etc/apt/sources.list.d/pgdg.list
@@ -190,113 +182,6 @@ postgres_go() {
 
 	# Restart so that all new config is loaded:
 	service postgresql restart
-
-	cat << EOF | su - postgres -c psql
-
-	-- Create the database user:
-	CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';
-
-	-- Create the database:
-	CREATE DATABASE $DB_NAME WITH OWNER=$DB_USER
-									LC_COLLATE='en_US.utf8'
-									LC_CTYPE='en_US.utf8'
-									ENCODING='UTF8'
-									TEMPLATE=template0;
-									
-	CREATE DATABASE $SPATIAL_DB_NAME WITH OWNER=$DB_USER
-									LC_COLLATE='en_US.utf8'
-									LC_CTYPE='en_US.utf8'
-									ENCODING='UTF8'
-									TEMPLATE=template0;
-
-	\c $SPATIAL_DB_NAME;
-
-	-- Enable postgis extension
-	CREATE EXTENSION postgis;
-
-	-- Table: public.parking_areas
-	-- DROP TABLE public.parking_areas;
-	CREATE TABLE public.parking_areas
-	(
-		id bigint NOT NULL,
-		geom geometry(MultiPolygon,4326),
-		CONSTRAINT areas_pkey PRIMARY KEY (id)
-	)
-	WITH (
-		OIDS=FALSE
-	);
-	ALTER TABLE public.parking_areas
-	OWNER TO $DB_USER;
-
-	-- Index: public.sidx_areas_geom
-	-- DROP INDEX public.sidx_areas_geom;
-	CREATE INDEX sidx_areas_geom
-	ON public.parking_areas
-	USING gist
-	(geom);
-
-	-- Table: public.parking_places
-	-- DROP TABLE public.parking_places;
-	CREATE TABLE public.parking_places
-	(
-		id bigint NOT NULL,
-		geom geometry(MultiPoint,4326),
-		estado integer,
-		x bigint,
-		y bigint,
-		CONSTRAINT parking_places_pkey PRIMARY KEY (id)
-	)
-	WITH (
-		OIDS=FALSE
-	);
-	ALTER TABLE public.parking_places
-	OWNER TO $DB_USER;
-
-	-- Index: public.sidx_parking_places_geom
-	-- DROP INDEX public.sidx_parking_places_geom;
-	CREATE INDEX sidx_parking_places_geom
-	ON public.parking_places
-	USING gist
-	(geom);
-
-	-- Table: public.spatial_ref_sys
-	-- DROP TABLE public.spatial_ref_sys;
-	CREATE TABLE public.spatial_ref_sys
-	(
-		srid integer NOT NULL,
-		auth_name character varying(256),
-		auth_srid integer,
-		srtext character varying(2048),
-		proj4text character varying(2048),
-		CONSTRAINT spatial_ref_sys_pkey PRIMARY KEY (srid),
-		CONSTRAINT spatial_ref_sys_srid_check CHECK (srid > 0 AND srid <= 998999)
-	)
-	WITH (
-		OIDS=FALSE
-	);
-	ALTER TABLE public.spatial_ref_sys
-	OWNER TO $DB_USER;
-	GRANT ALL ON TABLE public.spatial_ref_sys TO $DB_USER;
-	GRANT SELECT ON TABLE public.spatial_ref_sys TO public;
-	
-	\c $DB_NAME;
-
-	-- Table: public.test_table
-	-- DROP TABLE public.test_table;
-	CREATE TABLE public.test_table
-	(
-		test_column text
-	)
-	WITH (
-		OIDS=FALSE
-	);
-	ALTER TABLE public.test_table
-	OWNER TO $DB_USER;
-
-	INSERT INTO public.test_table(
-            test_column)
-    VALUES ('yes');
-EOF
 
 	# Tag the provision time:
 	date > "$PROVISIONED_ON"
