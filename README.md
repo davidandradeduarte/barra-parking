@@ -8,23 +8,21 @@ Requirements
 * VirtualBox <http://www.virtualbox.org>
 * Vagrant <http://www.vagrantup.com>
 * Git <http://git-scm.com/>
-*
 
 Optional tools
 ------------
 * Pgadmin <https://www.pgadmin.org/>
-*
 
 Usage
 -----
 
 ### Startup
 
-1. From the command-line:
+1. From the command-line
+*(use git bash if you are on Windows, to avoid PowerShell version issues)*:
 ```
 $ vagrant up
 ```
-2. 
 
 ### Connecting
 
