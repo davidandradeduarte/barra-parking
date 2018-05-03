@@ -19,35 +19,35 @@
             Projection: 'EPSG:4326',
             GetRoute: function () {
                 var vectorLayer;
-              $.ajax({
+                $.ajax({
                     url: 'GetRoute.php',
                     async: false,
                     dataType: "json",
-                    success: function(response){
+                    success: function (response) {
 
                         geojsonObject2 = jQuery.parseJSON(response);
 
                         var routeGeom = new ol.geom.LineString(geojsonObject2.coordinates),
-                        routeFeature = new ol.Feature({
-                            geometry: routeGeom
-                        });
+                            routeFeature = new ol.Feature({
+                                geometry: routeGeom
+                            });
 
                         var vectorSource = new ol.source.Vector({
                             features: [routeFeature]
                         });
 
-                         vectorLayer = new ol.layer.Vector({
+                        vectorLayer = new ol.layer.Vector({
                             source: vectorSource,
                             style: Parking.StylesGeneric()
                         });
-                       
+
                     },
-                    error: function(){
-                        vectorLayer= 'Error';
+                    error: function () {
+                        vectorLayer = 'Error';
                     }
                 });
 
-                 return vectorLayer;
+                return vectorLayer;
             },
             GetParkingsAndAreas: function () {
                 var vectorLayer;
@@ -55,7 +55,7 @@
                     url: 'GetParkingsAndAreas.php',
                     async: false,
                     dataType: "json",
-                    success: function(response){
+                    success: function (response) {
 
                         geojsonObject = jQuery.parseJSON(response);
                         var vectorSource = new ol.source.Vector({
@@ -68,14 +68,14 @@
                             source: vectorSource,
                             style: Parking.StylesGeneric()
                         });
-                       
+
                     },
-                    error: function(){
+                    error: function () {
                         return 'Error';
                     }
                 });
 
-                 return vectorLayer;
+                return vectorLayer;
             },
 
             GetCurrentLocation: function () {
@@ -140,24 +140,24 @@
                     center: [-8.74703452, 40.63910304],
                     zoom: 16
                 }),
-                
-                 map2 = new ol.Map({
-                    layers: [
-                        new ol.layer.Tile({
-                            source: new ol.source.OSM()
+
+                    map2 = new ol.Map({
+                        layers: [
+                            new ol.layer.Tile({
+                                source: new ol.source.OSM()
+                            }),
+                            Layer_Routes,
+                            Layer_ParkingAndAreas,
+                            Layer_CurrentLocation
+                        ],
+                        target: 'map',
+                        controls: ol.control.defaults({
+                            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                                collapsible: false
+                            })
                         }),
-                        Layer_Routes,
-                        Layer_ParkingAndAreas,
-                        Layer_CurrentLocation
-                    ],
-                    target: 'map',
-                    controls: ol.control.defaults({
-                        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-                            collapsible: false
-                        })
-                    }),
-                    view: viewGeneric
-                });
+                        view: viewGeneric
+                    });
             },
 
             StylesGeneric: function () {
@@ -167,70 +167,70 @@
                     fill: null,
                     stroke: new ol.style.Stroke({ color: 'red', width: 1 })
                 }),
-                styles = {
-                    'Point': new ol.style.Style({
-                        image: image
-                    }),
-                    'LineString': new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'green',
-                            width: 1
-                        })
-                    }),
-                    'MultiLineString': new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'green',
-                            width: 1
-                        })
-                    }),
-                    'MultiPoint': new ol.style.Style({
-                        image: image
-                    }),
-                    'MultiPolygon': new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'yellow',
-                            width: 1
+                    styles = {
+                        'Point': new ol.style.Style({
+                            image: image
                         }),
-                        fill: new ol.style.Fill({
-                            color: 'rgba(255, 255, 0, 0.1)'
-                        })
-                    }),
-                    'Polygon': new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'blue',
-                            lineDash: [4],
-                            width: 3
-                        }),
-                        fill: new ol.style.Fill({
-                            color: 'rgba(0, 0, 255, 0.1)'
-                        })
-                    }),
-                    'GeometryCollection': new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'magenta',
-                            width: 2
-                        }),
-                        fill: new ol.style.Fill({
-                            color: 'magenta'
-                        }),
-                        image: new ol.style.Circle({
-                            radius: 10,
-                            fill: null,
+                        'LineString': new ol.style.Style({
                             stroke: new ol.style.Stroke({
+                                color: 'green',
+                                width: 1
+                            })
+                        }),
+                        'MultiLineString': new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'green',
+                                width: 1
+                            })
+                        }),
+                        'MultiPoint': new ol.style.Style({
+                            image: image
+                        }),
+                        'MultiPolygon': new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'yellow',
+                                width: 1
+                            }),
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255, 255, 0, 0.1)'
+                            })
+                        }),
+                        'Polygon': new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'blue',
+                                lineDash: [4],
+                                width: 3
+                            }),
+                            fill: new ol.style.Fill({
+                                color: 'rgba(0, 0, 255, 0.1)'
+                            })
+                        }),
+                        'GeometryCollection': new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'magenta',
+                                width: 2
+                            }),
+                            fill: new ol.style.Fill({
                                 color: 'magenta'
+                            }),
+                            image: new ol.style.Circle({
+                                radius: 10,
+                                fill: null,
+                                stroke: new ol.style.Stroke({
+                                    color: 'magenta'
+                                })
+                            })
+                        }),
+                        'Circle': new ol.style.Style({
+                            stroke: new ol.style.Stroke({
+                                color: 'red',
+                                width: 2
+                            }),
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255,0,0,0.2)'
                             })
                         })
-                    }),
-                    'Circle': new ol.style.Style({
-                        stroke: new ol.style.Stroke({
-                            color: 'red',
-                            width: 2
-                        }),
-                        fill: new ol.style.Fill({
-                            color: 'rgba(255,0,0,0.2)'
-                        })
-                    })
-                };
+                    };
 
                 var styleFunction = function (feature) {
                     return styles[feature.getGeometry().getType()];
@@ -240,24 +240,25 @@
             },
 
             init: function () {
-                var LayerParkingsAndAreas= Parking.GetParkingsAndAreas(),
-                    LayerRoute=Parking.GetRoute(),
-                    LayerCurrentLocation=Parking.GetCurrentLocation();
+                var LayerParkingsAndAreas = Parking.GetParkingsAndAreas(),
+                    LayerRoute = Parking.GetRoute(),
+                    LayerCurrentLocation = Parking.GetCurrentLocation();
 
-                if(LayerParkingsAndAreas != 'Error' || LayerRoute != 'Error' || LayerCurrentLocation != 'Error'){
+                if (LayerParkingsAndAreas != 'Error' || LayerRoute != 'Error' || LayerCurrentLocation != 'Error') {
                     Parking.MAP(LayerParkingsAndAreas, LayerRoute, LayerCurrentLocation);
-                }else{
+                } else {
                     $("#map").html("Error");
                 }
             }
         };
 
-        $( document ).ready(function() {
+        $(document).ready(function () {
             Parking.init();
         });
-          
+
 
     </script>
-   
+
 </body>
+
 </html>
