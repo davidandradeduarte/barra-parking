@@ -6,7 +6,7 @@ php_config_file="/etc/php5/apache2/php.ini"
 xdebug_config_file="/etc/php5/mods-available/xdebug.ini"
 mysql_config_file="/etc/mysql/my.cnf"
 default_apache_index="/var/www/html/index.html"
-project_web_root="app"
+project_web_root="app/web/barra-parking/public"
 PG_VERSION=9.4
 
 # This function is called at the very bottom of the file
@@ -82,7 +82,9 @@ EOF
 }
 
 php_go() {
-    apt-get -y install php5 php5-curl php5-xdebug php-pear php5-pgsql
+    sudo apt-add-repository ppa:ondrej/php
+    sudo apt-get update
+    sudo apt-get -y install php7.1 php7.1-curl php7.1-xdebug php-pear php7.1-pgsql php7.1-xml
     #php5-mysql php5-sqlite
 
     sed -i "s/display_startup_errors = Off/display_startup_errors = On/g" ${php_config_file}

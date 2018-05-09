@@ -42,6 +42,14 @@ $ psql
 postgres=# <Run your SQL commands here>
 ```
 
+### Symfony web server
+You can optionally run the symfony embedded web server on your local machine.
+To do so, go to the symfony project root folder and run the following from command-line:
+```
+$ php -S 127.0.0.1:8000 -t public
+```
+Bear in mind that if you do this you will have to change your app configuration to listen Posgtres from the forwarded vagrant port, since symfony web server runs on your computer and not on the virtual machine.
+
 Technical Details
 -----------------
 * Ubuntu 14.04 64-bit
