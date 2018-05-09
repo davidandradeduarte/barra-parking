@@ -165,7 +165,14 @@ postgres_go() {
     apt-get update
     apt-get -y upgrade
 
-    apt-get -y install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION" postgresql-$PG_VERSION-postgis-2.1 -f
+    # Create /etc/apt/sources.list.d/pgdg.list. The distributions are called codename-pgdg.
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+    # Import the repository key, update the package lists
+    sudo apt-get install wget ca-certificates
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    
+    apt-get -y install "postgresql-$PG_VERSION" "postgresql-contrib-$PG_VERSION" "postgresql-$PG_VERSION-postgis-2.1" "postgresql-$PG_VERSION-pgrouting" -f
 
     PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
     PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
