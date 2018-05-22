@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 
 <head>
@@ -17,6 +16,34 @@
 
         var Parking = {
             Projection: 'EPSG:4326',
+            GetPontos_BARRA: function () {
+                var vectorLayer;
+                $.ajax({
+                    url: 'php/GetPontos.php',
+                    async: false,
+                    dataType: "json",
+                    success: function (response) {
+
+                        geojsonObject = jQuery.parseJSON(response);
+                        var vectorSource = new ol.source.Vector({
+                            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+                        });
+
+                        vectorSource.addFeature(new ol.Feature(new ol.geom.Circle([5e6, 7e6], 1e6)));
+
+                        vectorLayer = new ol.layer.Vector({
+                            source: vectorSource,
+                            style: Parking.StylesGeneric()
+                        });
+
+                    },
+                    error: function () {
+                        return 'Error';
+                    }
+                });
+
+                return vectorLayer;
+            },
             GetRoute: function () {
                 var vectorLayer;
                 $.ajax({
@@ -24,7 +51,6 @@
                     async: false,
                     dataType: "json",
                     success: function (response) {
-
                         geojsonObject2 = jQuery.parseJSON(response);
 
                         var routeGeom = new ol.geom.LineString(geojsonObject2.coordinates),
@@ -42,7 +68,8 @@
                         });
 
                     },
-                    error: function () {
+                    error: function (response) {
+
                         vectorLayer = 'Error';
                     }
                 });
@@ -133,7 +160,7 @@
                 return vectorLayer;
             },
 
-            MAP: function (Layer_ParkingAndAreas, Layer_Routes, Layer_CurrentLocation) {
+            MAP: function (Layer_ParkingAndAreas, Layer_Routes, Layer_CurrentLocation, LayerPontos) {
 
                 var viewGeneric = new ol.View({
                     projection: Parking.Projection,
@@ -148,7 +175,8 @@
                             }),
                             Layer_Routes,
                             Layer_ParkingAndAreas,
-                            Layer_CurrentLocation
+                            Layer_CurrentLocation,
+                            LayerPontos
                         ],
                         target: 'map',
                         controls: ol.control.defaults({
@@ -242,10 +270,11 @@
             init: function () {
                 var LayerParkingsAndAreas = Parking.GetParkingsAndAreas(),
                     LayerRoute = Parking.GetRoute(),
-                    LayerCurrentLocation = Parking.GetCurrentLocation();
+                    LayerCurrentLocation = Parking.GetCurrentLocation(),
+                    LayerPontos = Parking.GetPontos_BARRA();
 
                 if (LayerParkingsAndAreas != 'Error' || LayerRoute != 'Error' || LayerCurrentLocation != 'Error') {
-                    Parking.MAP(LayerParkingsAndAreas, LayerRoute, LayerCurrentLocation);
+                    Parking.MAP(LayerParkingsAndAreas, LayerRoute, LayerCurrentLocation, LayerPontos);
                 } else {
                     $("#map").html("Error");
                 }
