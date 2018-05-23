@@ -2,14 +2,44 @@
 
 <head>
     <title>BarraParking</title>
+    <!-- Desktop CSS -->
+    <link href="css/map.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 
 <body>
-    <div id="map" class="map"></div>
+    <!-- navbar and her content -->
+    <nav class="z-depth-3 navbar blue darken-2">
+        <div class="nav-wrapper">
+            <div class="row">
+                <div class="col s1">
+                    <img class="logo" src="images/logo.png" />
+                </div>
+                <div class="col s10">
+                    <a class="logo_nome">Barra Parking</a>
+                </div>
+                <div class="col s1">
+                    <ul id="nav-mobile" class="right">
+                        <li>
+                            <a class="material-icons" href="index.html">home</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main>
+        <div id="map" class="full-map"></div>
+    </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
     <script>

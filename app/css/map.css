@@ -8,11 +8,6 @@ body {
     flex: 1 0 auto;
   }
 
-.point {
-    width: 50%;
-    margin: 0 auto;
-}
-
 /* Mobile Styles */
 @media only screen and (max-width: 400px) {
 
@@ -59,56 +54,9 @@ body {
         height:56px;
     }
 
-    .textoTitulo{
-        text-align: center;
-        margin-top: 35px;
-        color: #1565c0;
-        font-size: 17px;
-        margin-bottom: 15px;
-    }
-
-    .divisao{
-        width: 50%;
-        margin: auto;
-        margin-bottom: 30px;
-    }
-
-    .ponto{
-        width: 60px;
-        height: 60px;
-        margin-left: auto;
-	    margin-right: auto;
-	    display: block;
-    }
-
-    .textoIcones{
-        font-size: 10px;
-        text-align: center;
-        color: #757575;
-    }
-
-    .titulos{
-        color: #616161;
-    }
-
-    footer{
-        margin-top: 50px;
-    }
-
-    .footer_nome{
-        font-size: 15px;
-    }
-
-    .footer_texto{
-        font-size: 12px;
-    }
-
-    .footer_icone{
-        cursor: pointer;
-        height: auto; 
-        width: auto; 
-        max-width: 25px; 
-        max-height: 25px;
+    .map{
+        width: 100%;
+        margin:0 auto;
     }
   }
   
@@ -159,57 +107,9 @@ body {
         /*height:63px;*/
     }
 
-    .textoTitulo{
-        text-align: center;
-        margin-top: 50px;
-        color: #1565c0;
-        font-size: 20px;
-        margin-bottom: 18px;
-    }
-
-    .divisao{
-        width: 60%;
-        margin: auto;
-        margin-bottom: 30px;
-    }
-
-    .ponto{
-        width: 80px;
-        height: 80px;
-        cursor: pointer;
-        margin-left: auto;
-	    margin-right: auto;
-	    display: block;
-    }
-
-    .textoIcones{
-        font-size: 12px;
-        text-align: center;
-        color: #757575;
-    }
-
-    .titulos{
-        color: #616161;
-    }
-
-    footer{
-        margin-top: 70px;
-    }
-
-    .footer_nome{
-        font-size: 15px;
-    }
-
-    .footer_texto{
-        font-size: 12px;
-    }
-
-    .footer_icone{
-        cursor: pointer;
-        height: auto; 
-        width: auto; 
-        max-width: 25px; 
-        max-height: 25px;
+    .map{
+        width: 100%;
+        margin:0 auto;
     }
   }
   
@@ -260,50 +160,8 @@ body {
         /*height:63px;*/
     }
 
-    .textoTitulo{
-        text-align: center;
-        margin-top: 50px;
-        color: #1565c0;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-
-    .divisao{
-        width: 65%;
-        margin: auto;
-        margin-bottom: 45px;
-    }
-
-    .ponto{
-        width: 100px;
-        height: 100px;
-        cursor: pointer;
-        margin-left: auto;
-	    margin-right: auto;
-	    display: block;
-    }
-    
-    .titulos{
-        color: #616161;
-    }
-
-    footer{
-        margin-top: 100px;
-    }
-
-    .footer_nome{
-        font-size: 17px;
-    }
-
-    .footer_nome{
-        font-size: 14px;
-    }
-
-    .footer_icone{
-        cursor: pointer;
-        height: auto; 
-        width: auto; 
-        max-width: 40px; 
-        max-height: 40px;
+    .map{
+        width: 100%;
+        margin:0 auto;
     }
   }
