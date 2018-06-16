@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $x1 = '-8.74376';
 $y1 = '40.63198';
 $x2 = '-8.74663';
@@ -10,15 +14,12 @@ $db_connection = pg_connect("host=localhost dbname=spatial_barra_parking user=ro
 
 
 
-$result = pg_query($db_connection, "SELECT vert.x2, vert.y2
-FROM pgr_dijkstra('
-SELECT id,
- source,
- target,
- cost,
-reverse_cost
-FROM road_network_arches',FindVertex('$x1', '$y1'), array[FindVertex('$x2', '$y2')],true)
-inner join road_network_arches as vert on vert.id= edge");
+$result = pg_query($db_connection, "SELECT  array_to_json(array_agg(feat)) As features
+FROM (SELECT 'Feature' As type,
+  ST_AsGeoJSON(b.geom_way)::json As geometry FROM pgr_dijkstra('
+  SELECT id, source::integer, target::integer, cost::double precision, reverse_cost
+  FROM road_network_arches', findVertex('-8.74376', '40.63198'),array[findVertex('-8.746174', '40.640612')], true) a
+  LEFT JOIN road_network_arches b ON (a.edge = b.id)) As feat");
 
 
 
@@ -27,63 +28,40 @@ if (!$result) {
     exit;
   }
 
-$rows = pg_num_rows($result);
+$row = pg_fetch_row($result);
 
-$geojson = '{
-    "type": "LineString",
-    "crs": {
-        "type": "name",
-        "properties": {
-            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+
+$array = json_decode($row[0], true);
+
+
+
+
+
+$countI = count($array) - 1;
+
+
+
+$coordenadasLinha ='{"coordinates":[';
+
+for($i=0;$i<$countI;$i++){
+    $countJ = count($array[$i]['geometry']['coordinates'][0]);
+    for ($j=0;$j<$countJ;$j++){
+        for($k=0;$k<2;$k++){
+            if($k == 1){
+                if($i == ($countI-1) && $j == ($countJ-1) && $k == 1){
+                    $coordenadasLinha.= $array[$i]['geometry']['coordinates'][0][$j][$k]."]"; 
+                }else{
+                    $coordenadasLinha.= $array[$i]['geometry']['coordinates'][0][$j][$k]."],"; 
+                }
+            }else{
+                $coordenadasLinha.= "[".$array[$i]['geometry']['coordinates'][0][$j][$k].","; 
+            }
         }
-    },
-    "coordinates":
-        [';
-        $i =1;
-        while ($row = pg_fetch_row($result)) {
-            if ($i == $rows) {
-                $geojson.= "[".$row[0].",".$row[1]."]";
-            }
-            else{
-                
-                $geojson.= "[".$row[0].",".$row[1]."],";
-            }
+    }
+}
+$coordenadasLinha.= "]}";
 
-            $i++;
-        }
-        //$geojson.='["-8.740374", "40.630780"],  [-8.74703452, 40.63910304]';
+echo json_encode($coordenadasLinha);
 
-        $geojson .= '], "properties": {
-            "distance": "21.452372",
-            "description": "To enable simple instructions add: as parameter to the URL",
-            "traveltime": "1228"
-        }
-}';
-    
-
-
-
-/* 
-
-    $geojson = '{
-        "type": "LineString",
-        "crs": {
-            "type": "name",
-            "properties": {
-                "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-            }
-        },
-        "coordinates":
-            [
-                [-8.74703452, 40.63910304]
-                ,[-8.442988600000035, 40.5743103]
-
-            ], "properties": {
-                "distance": "21.452372",
-                "description": "To enable simple instructions add: as parameter to the URL",
-                "traveltime": "1228"
-            }
-    }'; */
-        
-        echo json_encode($geojson);
+       
 ?>

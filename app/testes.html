@@ -1,0 +1,64 @@
+<html>
+
+<head>
+    <title>BarraParking</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+</head>
+
+<body>
+    <div id="test"></div>
+    <div id="map" class="map"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+    <script>
+
+        var Parking = {
+            Projection: 'EPSG:4326',
+
+            GetRoute: function () {
+                $.ajax({
+                    url: 'php/GetRoute.php',
+                    async: true,
+                    dataType: "json",
+                    success: function (response) {
+                        var teste = response + '';
+                        var array = teste.split(',');
+
+
+                        // var array = jQuery.parseJSON(response).split(',');
+                        /*
+                                                $.each(jQuery.parseJSON(response), function (index) {
+                                                    var isLastElement = index == jQuery.parseJSON(response).length - 1;
+                        
+                                                    json = JSON.stringify(this.geometry.coordinates);
+                                                    json = json.substring(0, json.length - 2);
+                                                    json = json.substring(2, json.length);
+                        
+                                                    if (!isLastElement) {
+                                                        json += ",";
+                                                    }
+                        
+                                                }); */
+                        // alert(json);
+                        $("#test").html(array[0]);
+                    },
+                    error: function (response) {
+                        alert("ERRO!!")
+                    }
+                });
+            }
+        };
+
+        $(document).ready(function () {
+            Parking.GetRoute();
+        });
+
+
+    </script>
+
+</body>
+
+</html>
