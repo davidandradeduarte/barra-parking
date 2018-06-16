@@ -98,55 +98,54 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="divider"></div>
-                        <div class="row" style="margin-top: 25px;">
+                        <div class="row" style="margin-top: 15px;">
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
                             </div>
                         </div>
                     </div>
@@ -154,15 +153,14 @@
             </div>
         </li>
         <li class="center-align">
-            <a class="btn pulse" style="border-radius: 25px;">
+            <a class="btn pulse" style="border-radius: 25px">
                 <i class="material-icons white-text right">directions_car</i>
-                <b>Obter Rota</b>
+                <b style="font-size: 12px;">Obter Rota</b>
             </a>
-            <div class="divider"></div>
             <a id="googleMaps" class="btn grey lighten-4" style="height: 50px; border-radius: 25px;">
-                <img style="vertical-align:middle; margin-right: 5px;" src="images/google.png">
+                <img style="vertical-align:middle; margin-right: 5px; width: 24px;" src="images/google.png">
                 <i class="material-icons right" style="vertical-align:middle">keyboard_arrow_right</i>
-                <b style="vertical-align:middle; color: #757575;">Google Maps</b>
+                <b style="vertical-align:middle; color: #757575; font-size: 12px;">Google Maps</b>
             </a>
         </li>
     </ul>
@@ -407,7 +405,8 @@
                         controls: ol.control.defaults({
                             attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
                                 collapsible: false
-                            })
+                            }),
+                            zoom: false
                         }),
                         view: viewGeneric
                     });
@@ -512,6 +511,7 @@
             $('.fixed-action-btn').floatingActionButton();
             $('.sidenav').sidenav();
             $('.tooltipped').tooltip();
+            $('select').formSelect();
             $('.modal').modal();
             $('.modal').modal('open');
 
