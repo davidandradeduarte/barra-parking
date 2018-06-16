@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Google Maps Trajeto</title>
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #floating-panel {
+            position: absolute;
+            top: 10px;
+            left: 25%;
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border: 1px solid #999;
+            text-align: center;
+            font-family: 'Roboto', 'sans-serif';
+            line-height: 30px;
+            padding-left: 10px;
+        }
+    </style>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large blue darken-4 z-depth-4" href="map.html">
+            <i class="large material-icons">map</i>
+        </a>
+    </div>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script>
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) { return pair[1]; }
+            }
+            return (false);
+        }
+
+        function initMap() {
+            var locationBase = getQueryVariable("from");
+            var destinationBase = getQueryVariable("to");
+
+            var valuesLocation = locationBase.split(',');
+            var valuesDestination = destinationBase.split(',');
+
+            var latLocation = parseFloat(valuesLocation[1]);
+            var lngLocation = parseFloat(valuesLocation[0]);
+
+            var latDestination = parseFloat(valuesDestination[1]);
+            var lngDestination = parseFloat(valuesDestination[0]);
+
+            var directionsService = new google.maps.DirectionsService;
+            var directionsDisplay = new google.maps.DirectionsRenderer;
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: { lat: latLocation, lng: lngLocation },
+                disableDefaultUI: true
+            });
+            directionsDisplay.setMap(map);
+
+            calculateAndDisplayRoute(directionsService, directionsDisplay, latLocation + "," + lngLocation, latDestination + "," + lngDestination);
+        }
+
+        function calculateAndDisplayRoute(directionsService, directionsDisplay, from, to) {
+            directionsService.route({
+                origin: from,
+                destination: to,
+                travelMode: 'DRIVING'
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setDirections(response);
+                } else {
+                    window.alert('Nenhum caminho encontrado: ' + status);
+                }
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqhId3qv1xvUEEpqhLgBcd9L_eo6uHtIo&callback=initMap">
+    </script>
+</body>
+
+</html>

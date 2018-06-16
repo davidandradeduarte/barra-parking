@@ -1,33 +1,289 @@
-<!DOCTYPE html>
 <html>
 
 <head>
+    <!-- Define page charset -->
+    <meta charset="UTF-8">
     <title>BarraParking</title>
+    <!-- Desktop CSS -->
+    <link href="css/map.css" rel="stylesheet" />
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- Compiled and minified CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js "></script>
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 </head>
 
 <body>
+
+    <!-- SideNav Structure -->
+    <!-- ******************************************************************************************************************** -->
+    <ul id="slide-out" class="sidenav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="images/barra3.jpg">
+                </div>
+                <a href="index.html">
+                    <img style="max-width: 25%; max-height: 25%;" src="images/logo.png">
+                </a>
+                <a>
+                    <span class="white-text name">Barra Parking</span>
+                </a>
+                <a>
+                    <span class="white-text email"></span>
+                </a>
+            </div>
+        </li>
+        <li>
+            <div class="card">
+                <div class="card-tabs">
+                    <ul class="tabs tabs-fixed-width">
+                        <li class="tab grey lighten-4">
+                            <a class="active grey lighten-4" href="#area_1">
+                                <b>Áreas</b>
+                            </a>
+                        </li>
+                        <li class="tab grey lighten-4">
+                            <a class="grey lighten-4" href="#area_2">
+                                <b>Pontos Turísticos</b>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-content grey lighten-4">
+                    <div id="area_1" class="center-align">
+                        <div class="row" style="margin-top: 25px;">
+                            <div class="col s4">
+                                <input type="image" src="images/area1.png" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 11px;">Área 1</b>
+                                <a class="btn-floating btn-small waves-effect waves-light light-blue darken-4 tooltipped" data-position="bottom" data-tooltip="Lugares livres: 8">
+                                    <i class="material-icons">info</i>
+                                </a>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/area2.png" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 11px;">Área 2</b>
+                                <a class="btn-floating btn-small waves-effect waves-light light-blue darken-4 tooltipped" data-position="bottom" data-tooltip="Lugares livres: 4">
+                                    <i class="material-icons">info</i>
+                                </a>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/area3.png" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 11px;">Área 3</b>
+                                <a class="btn-floating btn-small waves-effect waves-light light-blue darken-4 tooltipped" data-position="bottom" data-tooltip="Lugares livres: 12">
+                                    <i class="material-icons">info</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="area_2" class="center-align">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <select>
+                                    <option value="" disabled selected>Ponto de interesse</option>
+                                    <option value="gastronomia">Gastronomia</option>
+                                    <option value="comercio">Comércio</option>
+                                    <option value="hotelaria">Hotelaria</option>
+                                    <option value="praia">Praia</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="row" style="margin-top: 25px;">
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Farol Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Café Barra</b>
+                            </div>
+                            <div class="col s4">
+                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
+                                <b style="color: #757575; font-size: 10px;">Hostel Barra</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="center-align">
+            <a class="btn pulse" style="border-radius: 25px;">
+                <i class="material-icons white-text right">directions_car</i>
+                <b>Obter Rota</b>
+            </a>
+            <div class="divider"></div>
+            <a id="googleMaps" class="btn grey lighten-4" style="height: 50px; border-radius: 25px;">
+                <img style="vertical-align:middle; margin-right: 5px;" src="images/google.png">
+                <i class="material-icons right" style="vertical-align:middle">keyboard_arrow_right</i>
+                <b style="vertical-align:middle; color: #757575;">Google Maps</b>
+            </a>
+        </li>
+    </ul>
+    <!-- ******************************************************************************************************************** -->
+
+    <!-- Modal Structure -->
+    <!-- ******************************************************************************************************************** -->
+    <div id="modalArea" class="modal">
+        <div class="modal-content">
+            <h5>Escolha a área</h5>
+            <div class="divider dividerArea"></div>
+            <p>
+                <div class="card z-depth-0">
+                    <div class="card-tabs tabCards">
+                        <ul class="tabs tabs-fixed-width" style="height: 100px;">
+                            <li class="tab grey lighten-5">
+                                <a class="active grey lighten-5" href="#area1" style="height: 100px;">
+                                    <img class="z-depth-3" src="images/area1.png" style="border-radius: 25px;">
+                                </a>
+                            </li>
+                            <li class="tab grey lighten-5">
+                                <a class="grey lighten-5" href="#area2" style="height: 100px;">
+                                    <img class="z-depth-3" src="images/area2.png" style="border-radius: 25px;">
+                                </a>
+                            </li>
+                            <li class="tab grey lighten-5">
+                                <a class="grey lighten-5" href="#area3" style="height: 100px;">
+                                    <img class="z-depth-3" src="images/area3.png" style="border-radius: 25px;">
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-content grey lighten-5 center-align">
+                        <div id="area1" class="cardContentAreas">
+                            <div class="chip">
+                                <b>Área escolhida: Área 1</b>
+                            </div>
+                        </div>
+                        <div id="area2" class="cardContentAreas">
+                            <div class="chip">
+                                <b>Área escolhida: Área 2</b>
+                            </div>
+                        </div>
+                        <div id="area3" class="cardContentAreas">
+                            <div class="chip">
+                                <b>Área escolhida: Área 3</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a class="btn-floating btn-medium waves-effect waves-light green modalButtons ">
+                <i class="material-icons ">check</i>
+            </a>
+            <a class="btn-floating btn-medium waves-effect waves-light red modalButtons modal-action modal-close">
+                <i class="material-icons ">close</i>
+            </a>
+        </div>
+    </div>
+    <!-- ******************************************************************************************************************** -->
+
     <div id="map" class="map"></div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"> </script>
+    <div id="optionsMenu" class="fixed-action-btn">
+        <a href="#" data-target="slide-out" class="btn-floating btn-large blue darken-4 sidenav-trigger z-depth-4">
+            <i class="material-icons">menu</i>
+        </a>
+    </div>
+
     <script>
 
         var Parking = {
+            coordenadas: {
+                x1: '-8.74376',
+                y1: '40.63198',
+                x2: '-8.74663',
+                y2: '40.64044'
+            },
             Projection: 'EPSG:4326',
+            GetPontos_BARRA: function () {
+                var vectorLayer;
+                $.ajax({
+                    url: 'php/GetPontos.php',
+                    async: false,
+                    dataType: "json",
+                    success: function (response) {
+
+                        geojsonObject = jQuery.parseJSON(response);
+                        var vectorSource = new ol.source.Vector({
+                            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+                        });
+
+                        vectorSource.addFeature(new ol.Feature(new ol.geom.Circle([5e6, 7e6], 1e6)));
+
+                        vectorLayer = new ol.layer.Vector({
+                            source: vectorSource,
+                            style: Parking.StylesGeneric()
+                        });
+
+                    },
+                    error: function () {
+                        return 'Error';
+                    }
+                });
+
+                return vectorLayer;
+            },
             GetRoute: function () {
                 var vectorLayer;
+                var json = "";
                 $.ajax({
                     url: 'php/GetRoute.php',
                     async: false,
                     dataType: "json",
                     success: function (response) {
 
-                        geojsonObject2 = jQuery.parseJSON(response);
+                        geojsonObject = jQuery.parseJSON(response);
 
-                        var routeGeom = new ol.geom.LineString(geojsonObject2.coordinates),
+                        var routeGeom = new ol.geom.LineString(geojsonObject.coordinates),
                             routeFeature = new ol.Feature({
                                 geometry: routeGeom
                             });
@@ -42,7 +298,7 @@
                         });
 
                     },
-                    error: function () {
+                    error: function (response) {
                         vectorLayer = 'Error';
                     }
                 });
@@ -103,16 +359,12 @@
 
                 var positionFeature = new ol.Feature();
                 positionFeature.setStyle(new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 6,
-                        fill: new ol.style.Fill({
-                            color: '#3399CC'
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: '#fff',
-                            width: 2
-                        })
-                    })
+                    image: new ol.style.Icon(/** @type {olx.style.IconOptions} */({
+                        anchor: [0.5, 46],
+                        anchorXUnits: 'fraction',
+                        anchorYUnits: 'pixels',
+                        src: 'images/cursor.png'
+                    }))
                 }));
 
                 geolocation.on('change:position', function () {
@@ -133,7 +385,7 @@
                 return vectorLayer;
             },
 
-            MAP: function (Layer_ParkingAndAreas, Layer_Routes, Layer_CurrentLocation) {
+            MAP: function (Layer_ParkingAndAreas, Layer_Routes, Layer_CurrentLocation, LayerPontos) {
 
                 var viewGeneric = new ol.View({
                     projection: Parking.Projection,
@@ -148,7 +400,8 @@
                             }),
                             Layer_Routes,
                             Layer_ParkingAndAreas,
-                            Layer_CurrentLocation
+                            Layer_CurrentLocation,
+                            LayerPontos
                         ],
                         target: 'map',
                         controls: ol.control.defaults({
@@ -174,7 +427,7 @@
                         'LineString': new ol.style.Style({
                             stroke: new ol.style.Stroke({
                                 color: 'green',
-                                width: 1
+                                width: 4
                             })
                         }),
                         'MultiLineString': new ol.style.Style({
@@ -242,10 +495,11 @@
             init: function () {
                 var LayerParkingsAndAreas = Parking.GetParkingsAndAreas(),
                     LayerRoute = Parking.GetRoute(),
-                    LayerCurrentLocation = Parking.GetCurrentLocation();
+                    LayerCurrentLocation = Parking.GetCurrentLocation(),
+                    LayerPontos = Parking.GetPontos_BARRA();
 
                 if (LayerParkingsAndAreas != 'Error' || LayerRoute != 'Error' || LayerCurrentLocation != 'Error') {
-                    Parking.MAP(LayerParkingsAndAreas, LayerRoute, LayerCurrentLocation);
+                    Parking.MAP(LayerParkingsAndAreas, LayerRoute, LayerCurrentLocation, LayerPontos);
                 } else {
                     $("#map").html("Error");
                 }
@@ -254,7 +508,27 @@
 
         $(document).ready(function () {
             Parking.init();
+
+            $('.fixed-action-btn').floatingActionButton();
+            $('.sidenav').sidenav();
+            $('.tooltipped').tooltip();
+            $('.modal').modal();
+            $('.modal').modal('open');
+
+
+
+            $('#googleMaps').click(function () {
+                window.location.href = 'googlemaps.html?from=' + Parking.coordenadas.x1 + ',' + Parking.coordenadas.y1 + '&to=' + Parking.coordenadas.x2 + ',' + Parking.coordenadas.y2;
+            })
+
         });
+
+
+        $(document).click(function () {
+            $(".tooltip ").trigger("mouseenter.tooltip ");
+            setTimeout(function () { $(".tooltip ").trigger("mouseleave.tooltip "); }, 2000);
+        });
+
 
 
     </script>
