@@ -27,7 +27,7 @@
 
     <!-- SideNav Structure -->
     <!-- ******************************************************************************************************************** -->
-    <ul id="slide-out" class="sidenav">
+    <ul id="slide-out" class="sidenav z-depth-5">
         <li>
             <div class="user-view">
                 <div class="background">
@@ -62,34 +62,42 @@
                 </div>
                 <div class="card-content grey lighten-4">
                     <div id="area_1" class="center-align">
-                        <div class="row" style="margin-top: 25px;">
+                        <!-- ***************** Appends here areas options ****************************** -->
+                        <div id="appendAreasSideNav" class="row" style="margin-top: 25px;">
                             <div class="col s4">
                                 <input type="image" src="images/area1.png" style="width: 100%; height: 5%;" />
                                 <b style="color: #757575; font-size: 11px;">Área 1</b>
-                                <a class="btn-floating btn-small waves-effect waves-light light-blue darken-4 tooltipped" data-position="bottom" data-tooltip="Lugares livres: 8">
-                                    <i class="material-icons">info</i>
-                                </a>
+
+                                <div class="progress" style="margin-bottom: -10px; margin-top: -5px;">
+                                    <div id="img_lugares1" class="determinate" style="width: 100%"></div>
+                                </div>
+                                <b id="text_lugares1" style="color: #757575; font-size: 11px;">Livres:</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/area2.png" style="width: 100%; height: 5%;" />
                                 <b style="color: #757575; font-size: 11px;">Área 2</b>
-                                <a class="btn-floating btn-small waves-effect waves-light light-blue darken-4 tooltipped" data-position="bottom" data-tooltip="Lugares livres: 4">
-                                    <i class="material-icons">info</i>
-                                </a>
+
+                                <div class="progress" style="margin-bottom: -10px; margin-top: -5px;">
+                                    <div id="img_lugares2" class="determinate" style="width: 100%"></div>
+                                </div>
+                                <b id="text_lugares2" style="color: #757575; font-size: 11px;">Livres:</b>
                             </div>
                             <div class="col s4">
                                 <input type="image" src="images/area3.png" style="width: 100%; height: 5%;" />
                                 <b style="color: #757575; font-size: 11px;">Área 3</b>
-                                <a class="btn-floating btn-small waves-effect waves-light light-blue darken-4 tooltipped" data-position="bottom" data-tooltip="Lugares livres: 12">
-                                    <i class="material-icons">info</i>
-                                </a>
+
+                                <div class="progress" style="margin-bottom: -10px; margin-top: -5px;">
+                                    <div id="img_lugares3" class="determinate" style="width: 100%"></div>
+                                </div>
+                                <b id="text_lugares3" style="color: #757575; font-size: 11px;">Livres:</b>
                             </div>
                         </div>
                     </div>
-                    <div id="area_2" class="center-align">
+                    <div id="area_2" class="center-align" style="overflow-y:hidden;">
                         <div class="row">
                             <div class="input-field col s12">
-                                <select>
+                                <!-- ***************** Maybe appends here interest points ****************************** -->
+                                <select id="ponto_interesse">
                                     <option value="" disabled selected>Ponto de interesse</option>
                                     <option value="gastronomia">Gastronomia</option>
                                     <option value="comercio">Comércio</option>
@@ -98,7 +106,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 15px;">
+                        <div id="selectPontosInteresse" class="row">
                             <div class="col s4">
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
                                 <b style="color: #757575; font-size: 8px;">Farol Barra</b>
@@ -175,7 +183,8 @@
             <p>
                 <div class="card z-depth-0">
                     <div class="card-tabs tabCards">
-                        <ul class="tabs tabs-fixed-width" style="height: 100px;">
+                        <!-- ***************** Appends here areas images ****************************** -->
+                        <ul id="appendAreasModalImages" class="tabs tabs-fixed-width" style="height: 100px;">
                             <li class="tab grey lighten-5">
                                 <a class="active grey lighten-5" href="#area1" style="height: 100px;">
                                     <img class="z-depth-3" src="images/area1.png" style="border-radius: 25px;">
@@ -193,7 +202,8 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="card-content grey lighten-5 center-align">
+                    <!-- ******************* Appends here areas chips *************************** -->
+                    <div id="appendAreasModalChips" class="card-content grey lighten-5 center-align">
                         <div id="area1" class="cardContentAreas">
                             <div class="chip">
                                 <b>Área escolhida: Área 1</b>
@@ -241,35 +251,9 @@
                 x2: '-8.74663',
                 y2: '40.64044'
             },
+            map: '',
             Projection: 'EPSG:4326',
-            GetPontos_BARRA: function () {
-                var vectorLayer;
-                $.ajax({
-                    url: 'php/GetPontos.php',
-                    async: false,
-                    dataType: "json",
-                    success: function (response) {
-
-                        geojsonObject = jQuery.parseJSON(response);
-                        var vectorSource = new ol.source.Vector({
-                            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
-                        });
-
-                        vectorSource.addFeature(new ol.Feature(new ol.geom.Circle([5e6, 7e6], 1e6)));
-
-                        vectorLayer = new ol.layer.Vector({
-                            source: vectorSource,
-                            style: Parking.StylesGeneric()
-                        });
-
-                    },
-                    error: function () {
-                        return 'Error';
-                    }
-                });
-
-                return vectorLayer;
-            },
+            LayerParkingsFree: '',
             GetRoute: function () {
                 var vectorLayer;
                 var json = "";
@@ -361,6 +345,40 @@
                 return vectorLayer;
             },
 
+            GetParkingsFree: function () {
+                var vectorLayer;
+                $.ajax({
+                    url: 'php/GetParkingsFree.php',
+                    async: false,
+                    dataType: "json",
+                    success: function (response) {
+
+                        geojsonObject = jQuery.parseJSON(response);
+                        var vectorSource = new ol.source.Vector({
+                            features: (new ol.format.GeoJSON()).readFeatures(geojsonObject)
+                        });
+
+                        vectorSource.addFeature(new ol.Feature(new ol.geom.Circle([5e6, 7e6], 1e6)));
+
+                        vectorLayer = new ol.layer.Vector({
+                            source: vectorSource,
+                            style: new ol.style.Style({
+                                image: new ol.style.Circle({
+                                    radius: 5,
+                                    fill: new ol.style.Fill({ color: 'green' })
+                                })
+                            })
+                        });
+                    },
+                    error: function () {
+                        return 'Error';
+                    }
+                });
+
+
+                return vectorLayer;
+            },
+
             GetCurrentLocation: function () {
                 var geolocation = new ol.Geolocation({
                     projection: Parking.Projection
@@ -412,33 +430,34 @@
                 return vectorLayer;
             },
 
-            MAP: function (LayerAreas, Layer_Routes, Layer_CurrentLocation, LayerPontos) {
+            MAP: function (LayerAreas, Layer_Routes, Layer_CurrentLocation, LayerParkings, LayerParkingsFree) {
 
                 var viewGeneric = new ol.View({
                     projection: Parking.Projection,
                     center: [-8.74703452, 40.63910304],
                     zoom: 16
-                }),
+                })
 
-                    map2 = new ol.Map({
-                        layers: [
-                            new ol.layer.Tile({
-                                source: new ol.source.OSM()
-                            }),
-                            Layer_Routes,
-                            LayerAreas,
-                            Layer_CurrentLocation,
-                            LayerPontos
-                        ],
-                        target: 'map',
-                        controls: ol.control.defaults({
-                            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
-                                collapsible: false
-                            }),
-                            zoom: false
+                Parking.map = new ol.Map({
+                    layers: [
+                        new ol.layer.Tile({
+                            source: new ol.source.OSM()
                         }),
-                        view: viewGeneric
-                    });
+                        Layer_Routes,
+                        LayerAreas,
+                        Layer_CurrentLocation,
+                        LayerParkings,
+                        LayerParkingsFree
+                    ],
+                    target: 'map',
+                    controls: ol.control.defaults({
+                        attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                            collapsible: false
+                        }),
+                        zoom: false
+                    }),
+                    view: viewGeneric
+                });
             },
 
             StylesGeneric: function () {
@@ -519,15 +538,22 @@
 
                 return styleFunction;
             },
-
+            ReloadParkingsFree: function () {
+                Parking.map.removeLayer(Parking.LayerParkingsFree);
+                Parking.LayerParkingsFree = Parking.GetParkingsFree();
+                Parking.map.addLayer(Parking.LayerParkingsFree);
+            },
             init: function () {
+
                 var LayerAreas = Parking.GetAreas(),
                     LayerRoute = Parking.GetRoute(),
                     LayerCurrentLocation = Parking.GetCurrentLocation(),
-                    LayerPontos = Parking.GetPontos_BARRA();
+                    LayerParkings = Parking.GetParkings();
+                Parking.LayerParkingsFree = Parking.GetParkingsFree();
 
-                if (LayerAreas != 'Error' || LayerRoute != 'Error' || LayerCurrentLocation != 'Error') {
-                    Parking.MAP(LayerAreas, LayerRoute, LayerCurrentLocation, LayerPontos);
+                if (LayerAreas != 'Error' && LayerRoute != 'Error' && LayerCurrentLocation != 'Error' && LayerParkings != 'Error') {
+                    Parking.MAP(LayerAreas, LayerRoute, LayerCurrentLocation, LayerParkings, Parking.LayerParkingsFree);
+
                 } else {
                     $("#map").html("Error");
                 }
@@ -536,6 +562,10 @@
 
         $(document).ready(function () {
             Parking.init();
+
+            window.setInterval(function () {
+                Parking.ReloadParkingsFree();
+            }, 1000);
 
             $('.fixed-action-btn').floatingActionButton();
             $('.sidenav').sidenav();
@@ -548,7 +578,8 @@
 
             $('#googleMaps').click(function () {
                 window.location.href = 'googlemaps.html?from=' + Parking.coordenadas.x1 + ',' + Parking.coordenadas.y1 + '&to=' + Parking.coordenadas.x2 + ',' + Parking.coordenadas.y2;
-            })
+            });
+
 
         });
 
@@ -558,7 +589,24 @@
             setTimeout(function () { $(".tooltip ").trigger("mouseleave.tooltip "); }, 2000);
         });
 
+        // Função para alterar parametros de informação dos lugares livres
+        function alteraLugares(idImageArea, percent, idTextArea, lugares) {
+            if (percent <= 35) {
+                document.getElementById(idImageArea).style.backgroundColor = "#1b5e20";
+            } else if (percent > 35 && percent <= 70) {
+                document.getElementById(idImageArea).style.backgroundColor = "#006064";
+            } else if (percent > 70 && percent <= 90) {
+                document.getElementById(idImageArea).style.backgroundColor = "#e65100";
+            } else if (percent > 90) {
+                document.getElementById(idImageArea).style.backgroundColor = "#b71c1c";
+            }
+            document.getElementById(idImageArea).style.width = percent;
+            document.getElementById(idTextArea).innerHTML = "Livres: " + lugares;
+        }
 
+        alteraLugares("img_lugares1", 34, "text_lugares1", 12);
+        alteraLugares("img_lugares2", 91, "text_lugares2", 3);
+        alteraLugares("img_lugares3", 75, "text_lugares3", 8);
 
     </script>
 

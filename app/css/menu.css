@@ -8,6 +8,11 @@ body {
     flex: 1 0 auto;
   }
 
+.point {
+    width: 50%;
+    margin: 0 auto;
+}
+
 /* Mobile Styles */
 @media only screen and (max-width: 400px) {
 
@@ -69,13 +74,17 @@ body {
     }
 
     .ponto{
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
+        margin-left: auto;
+	    margin-right: auto;
+	    display: block;
     }
 
     .textoIcones{
-        font-size: 8px;
+        font-size: 10px;
         text-align: center;
+        color: #757575;
     }
 
     .titulos{
@@ -165,14 +174,18 @@ body {
     }
 
     .ponto{
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         cursor: pointer;
+        margin-left: auto;
+	    margin-right: auto;
+	    display: block;
     }
 
     .textoIcones{
-        font-size: 10px;
+        font-size: 12px;
         text-align: center;
+        color: #757575;
     }
 
     .titulos{
@@ -262,9 +275,12 @@ body {
     }
 
     .ponto{
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         cursor: pointer;
+        margin-left: auto;
+	    margin-right: auto;
+	    display: block;
     }
     
     .titulos{

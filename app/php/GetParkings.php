@@ -5,11 +5,9 @@ $db_connection = pg_connect("host=localhost dbname=spatial_barra_parking user=ro
 $result = pg_query($db_connection, "select json_build_object(
     'type', 'FeatureCollection', 'features',
     (select json_agg(p1) from (select 'Feature' as type,
-        json_build_object('id', id, 'nome', nome) as properties,
+        json_build_object('id', id, 'estado', estado) as properties,
 		ST_AsGeoJSON(geom)::json As geometry
-        from parking_areas) p1));");
-
-
+        from parking_places) p1));");
 
 if (!$result) {
     echo "An error occurred.\n";
