@@ -33,6 +33,31 @@
     text-shadow: 1px 1px 2px #212121;
 }
 
+#nomeArea{
+    text-overflow: ellipsis;
+    overflow: hidden; 
+    white-space: nowrap;
+}
+
+.tabs .tab a{
+    color:#1565c0;
+} /*Black color to the text*/
+
+.tabs .tab a:hover {
+    background-color:#eee;
+    color:#1565c0;
+} /*Text color on hover*/
+
+.tabs .tab a.active {
+    background-color:#888;
+    color:#1565c0;
+} /*Background and text color when a tab is active*/
+
+.tabs .indicator {
+    background-color: #1565c0;
+} /*Color of underline*/
+
+
 /* Mobile Styles */
 @media only screen and (max-width: 400px) {
 
@@ -45,7 +70,8 @@
 
     ::-webkit-scrollbar
     {
-        width: 8px;
+        width: 6px;
+        height: 4px;
         background-color: #F5F5F5;
     }
 
@@ -56,8 +82,16 @@
         background-color: #555;
     }
 
-    .modalButtons{
+    #modalButton{
         margin-right: 10px;
+        border-radius: 25px;
+        display: -webkit-flex;
+        display: flex; 
+        -webkit-flex-wrap: wrap; 
+        flex-wrap: wrap; 
+        -webkit-align-content: center; 
+        align-content: center;
+        margin-top: -10px;
     }
 
     .tabCards{
@@ -72,6 +106,14 @@
     .cardContentAreas{
         margin-top: 20px;
         margin-bottom: -20px;
+    }
+
+    #chipNomeArea{
+        width: 200px; 
+        overflow: hidden; 
+        display: inline-block; 
+        text-overflow: ellipsis; 
+        white-space: nowrap;
     }
 }
   
@@ -88,6 +130,7 @@
     ::-webkit-scrollbar
     {
         width: 10px;
+        height: 8px;
         background-color: #F5F5F5;
     }
 
@@ -98,10 +141,20 @@
         background-color: #555;
     }
 
-    .modalButtons{
-        margin-right: 15px;
+    #modalOptions{
+        margin-bottom: 10px;
     }
 
+    #modalButton{
+        margin-right: 10px;
+        border-radius: 25px;
+        display: -webkit-flex;
+        display: flex; 
+        -webkit-flex-wrap: wrap; 
+        flex-wrap: wrap; 
+        -webkit-align-content: center; 
+        align-content: center;
+    }
     .tabCards{
         display: flex;
         flex-direction: column-reverse;
@@ -114,6 +167,14 @@
     .cardContentAreas{
         margin-top: 30px;
         margin-bottom: -30px;
+    }
+
+    #chipNomeArea{
+        width: 300px; 
+        overflow: hidden; 
+        display: inline-block; 
+        text-overflow: ellipsis; 
+        white-space: nowrap;
     }
 }
   
@@ -129,7 +190,8 @@
 
     ::-webkit-scrollbar
     {
-        width: 12px;
+        width: 10px;
+        height: 8px;
         background-color: #F5F5F5;
     }
 
@@ -140,8 +202,19 @@
         background-color: #555;
     }
 
-    .modalButtons{
-        margin-right: 15px;
+    #modalOptions{
+        margin-bottom: 5px;
+    }
+
+    #modalButton{
+        margin-right: 10px;
+        border-radius: 25px;
+        display: -webkit-flex;
+        display: flex; 
+        -webkit-flex-wrap: wrap; 
+        flex-wrap: wrap; 
+        -webkit-align-content: center; 
+        align-content: center;
     }
 
     .dividerArea{

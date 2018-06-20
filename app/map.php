@@ -4,8 +4,6 @@
     <!-- Define page charset -->
     <meta charset="UTF-8">
     <title>BarraParking</title>
-    <!-- Desktop CSS -->
-    <link href="css/map.css" rel="stylesheet" />
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
@@ -13,6 +11,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+    <!-- Desktop CSS -->
+    <link href="css/map.css" rel="stylesheet" />
     <!-- Compiled and minified JavaScript -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
@@ -22,6 +22,7 @@
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
 </head>
+
 
 <body>
 
@@ -50,12 +51,12 @@
                     <ul class="tabs tabs-fixed-width">
                         <li class="tab grey lighten-4">
                             <a class="active grey lighten-4" href="#area_1">
-                                <b>Áreas</b>
+                                Áreas
                             </a>
                         </li>
                         <li class="tab grey lighten-4">
                             <a class="grey lighten-4" href="#area_2">
-                                <b>Pontos Turísticos</b>
+                                Pontos Turísticos
                             </a>
                         </li>
                     </ul>
@@ -63,35 +64,7 @@
                 <div class="card-content grey lighten-4">
                     <div id="area_1" class="center-align">
                         <!-- ***************** Appends here areas options ****************************** -->
-                        <div id="appendAreasSideNav" class="row" style="margin-top: 25px;">
-                            <div class="col s4">
-                                <input type="image" src="images/area1.png" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 11px;">Área 1</b>
-
-                                <div class="progress" style="margin-bottom: -10px; margin-top: -5px;">
-                                    <div id="img_lugares1" class="determinate" style="width: 100%"></div>
-                                </div>
-                                <b id="text_lugares1" style="color: #757575; font-size: 11px;">Livres:</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/area2.png" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 11px;">Área 2</b>
-
-                                <div class="progress" style="margin-bottom: -10px; margin-top: -5px;">
-                                    <div id="img_lugares2" class="determinate" style="width: 100%"></div>
-                                </div>
-                                <b id="text_lugares2" style="color: #757575; font-size: 11px;">Livres:</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/area3.png" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 11px;">Área 3</b>
-
-                                <div class="progress" style="margin-bottom: -10px; margin-top: -5px;">
-                                    <div id="img_lugares3" class="determinate" style="width: 100%"></div>
-                                </div>
-                                <b id="text_lugares3" style="color: #757575; font-size: 11px;">Livres:</b>
-                            </div>
-                        </div>
+                        <div id="appendAreasSideNav" class="row" style="margin-top: 25px; margin-bottom: -5px;"></div>
                     </div>
                     <div id="area_2" class="center-align" style="overflow-y:hidden;">
                         <div class="row">
@@ -99,7 +72,7 @@
                                 <!-- ***************** Maybe appends here interest points ****************************** -->
                                 <select id="ponto_interesse">
                                     <option value="" disabled selected>Ponto de interesse</option>
-                                    <option value="gastronomia">Gastronomia</option>
+                                    <option value="restaurant">Gastronomia</option>
                                     <option value="comercio">Comércio</option>
                                     <option value="hotelaria">Hotelaria</option>
                                     <option value="praia">Praia</option>
@@ -119,49 +92,14 @@
                                 <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
                                 <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
                             </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Farol Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Café Barra</b>
-                            </div>
-                            <div class="col s4">
-                                <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />
-                                <b style="color: #757575; font-size: 8px;">Hostel Barra</b>
-                            </div>
+                          
                         </div>
                     </div>
                 </div>
             </div>
         </li>
         <li class="center-align">
-            <a class="btn pulse" style="border-radius: 25px">
+            <a class="btn  blue darken-3" style="border-radius: 25px">
                 <i class="material-icons white-text right">directions_car</i>
                 <b style="font-size: 12px;">Obter Rota</b>
             </a>
@@ -185,56 +123,25 @@
                     <div class="card-tabs tabCards">
                         <!-- ***************** Appends here areas images ****************************** -->
                         <ul id="appendAreasModalImages" class="tabs tabs-fixed-width" style="height: 100px;">
-                            <li class="tab grey lighten-5">
-                                <a class="active grey lighten-5" href="#area1" style="height: 100px;">
-                                    <img class="z-depth-3" src="images/area1.png" style="border-radius: 25px;">
-                                </a>
-                            </li>
-                            <li class="tab grey lighten-5">
-                                <a class="grey lighten-5" href="#area2" style="height: 100px;">
-                                    <img class="z-depth-3" src="images/area2.png" style="border-radius: 25px;">
-                                </a>
-                            </li>
-                            <li class="tab grey lighten-5">
-                                <a class="grey lighten-5" href="#area3" style="height: 100px;">
-                                    <img class="z-depth-3" src="images/area3.png" style="border-radius: 25px;">
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                     <!-- ******************* Appends here areas chips *************************** -->
-                    <div id="appendAreasModalChips" class="card-content grey lighten-5 center-align">
-                        <div id="area1" class="cardContentAreas">
-                            <div class="chip">
-                                <b>Área escolhida: Área 1</b>
-                            </div>
-                        </div>
-                        <div id="area2" class="cardContentAreas">
-                            <div class="chip">
-                                <b>Área escolhida: Área 2</b>
-                            </div>
-                        </div>
-                        <div id="area3" class="cardContentAreas">
-                            <div class="chip">
-                                <b>Área escolhida: Área 3</b>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="appendAreasModalChips" class="card-content grey lighten-5 center-align"></div>
                 </div>
             </p>
         </div>
-        <div class="modal-footer">
-            <a class="btn-floating btn-medium waves-effect waves-light green modalButtons ">
-                <i class="material-icons ">check</i>
-            </a>
-            <a class="btn-floating btn-medium waves-effect waves-light red modalButtons modal-action modal-close">
-                <i class="material-icons ">close</i>
+        <div id="modalOptions" class="modal-footer">
+            <a id="modalButton" class="btn blue darken-3 modal-action">
+                <i class="material-icons white-text" style="margin-right: 10px;">directions_car</i>
+                <b style="font-size: 12px;">Obter Rota</b>
             </a>
         </div>
     </div>
     <!-- ******************************************************************************************************************** -->
 
     <div id="map" class="map"></div>
+    <div id="geo-marker"></div>
 
     <div id="optionsMenu" class="fixed-action-btn">
         <a href="#" data-target="slide-out" class="btn-floating btn-large blue darken-4 sidenav-trigger z-depth-4">
@@ -254,6 +161,8 @@
             map: '',
             Projection: 'EPSG:4326',
             LayerParkingsFree: '',
+            routeCoords:'',
+            routeLength:'',
             GetRoute: function () {
                 var vectorLayer;
                 var json = "";
@@ -270,6 +179,8 @@
                                 geometry: routeGeom
                             });
 
+                        Parking.routeCoords = routeGeom.getCoordinates();
+                        Parking.routeLength = Parking.routeCoords.length;
                         var vectorSource = new ol.source.Vector({
                             features: [routeFeature]
                         });
@@ -279,6 +190,14 @@
                             style: Parking.StylesGeneric()
                         });
 
+                         var startMarker = new ol.Feature({
+                            type: 'icon',
+                            geometry: new ol.geom.Point(Parking.routeCoords[0])
+                        });
+                        var endMarker = new ol.Feature({
+                            type: 'icon',
+                            geometry: new ol.geom.Point(Parking.routeCoords[Parking.routeLength - 1])
+                        });
                     },
                     error: function (response) {
                         vectorLayer = 'Error';
@@ -364,8 +283,8 @@
                             source: vectorSource,
                             style: new ol.style.Style({
                                 image: new ol.style.Circle({
-                                    radius: 5,
-                                    fill: new ol.style.Fill({ color: 'green' })
+                                    radius: 3,
+                                    fill: new ol.style.Fill({ color: '#388e3c' })
                                 })
                             })
                         });
@@ -463,9 +382,9 @@
             StylesGeneric: function () {
 
                 var image = new ol.style.Circle({
-                    radius: 5,
+                    radius: 1,
                     fill: null,
-                    stroke: new ol.style.Stroke({ color: 'red', width: 1 })
+                    stroke: new ol.style.Stroke({ color: '#1976d2', width: 1 })
                 }),
                     styles = {
                         'Point': new ol.style.Style({
@@ -473,13 +392,13 @@
                         }),
                         'LineString': new ol.style.Style({
                             stroke: new ol.style.Stroke({
-                                color: 'green',
+                                color: '#0277bd',
                                 width: 4
                             })
                         }),
                         'MultiLineString': new ol.style.Style({
                             stroke: new ol.style.Stroke({
-                                color: 'green',
+                                color: '#0277bd',
                                 width: 1
                             })
                         }),
@@ -488,11 +407,11 @@
                         }),
                         'MultiPolygon': new ol.style.Style({
                             stroke: new ol.style.Stroke({
-                                color: 'red',
+                                color: '#607d8b',
                                 width: 1
                             }),
                             fill: new ol.style.Fill({
-                                color: 'rgba(255, 255, 0, 0.1)'
+                                color: '#b3e5fc'
                             })
                         }),
                         'Polygon': new ol.style.Style({
@@ -523,11 +442,17 @@
                         }),
                         'Circle': new ol.style.Style({
                             stroke: new ol.style.Stroke({
-                                color: 'red',
+                                color: '#1976d2',
                                 width: 2
                             }),
                             fill: new ol.style.Fill({
-                                color: 'rgba(255,0,0,0.2)'
+                                color: '#1976d2'
+                            })
+                        }),
+                        'icon': new ol.style.Style({
+                            image: new ol.style.Icon({
+                                anchor: [0.5, 1],
+                                src: 'https://openlayers.org/en/v4.6.5/examples/data/icon.png'
                             })
                         })
                     };
@@ -543,6 +468,46 @@
                 Parking.LayerParkingsFree = Parking.GetParkingsFree();
                 Parking.map.addLayer(Parking.LayerParkingsFree);
             },
+            getInterestedPoints: function(){
+                var data = {
+                        type: $("#ponto_interesse").val()
+                    };
+
+                $.ajax({
+                    url: "php/GetInterestedPoints.php",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: data,
+                    success: function (response) {
+                        var parse = JSON.parse(response);
+
+                        $.each(parse.results, function (i, item) {
+
+                            var apend = '<div class="col s4" long="'+item.geometry.location.lng+'" lat="'+item.geometry.location.lat+'">\
+                                        <input type="image" src="images/barra3.jpg" style="width: 100%; height: 5%;" />\
+                                            <b style="color: #757575; font-size: 8px;">'+item.name+'</b>\
+                                        </div>';
+
+                            $('#selectPontosInteresse').append(apend);
+
+                            /* if (item.opening_hours.open_now == true) {
+                                //está aberto
+                            } else {
+                                //está fechado
+                            }
+
+                            if (item.photos[0].photo_reference != "") {
+                                //AQUI FAZ APPENND DAS FOTOS NA DIV LOCAIS
+                             
+                            } */
+                        });
+
+                    },
+                    error: function (response) {
+                        alert("Erro");
+                    }
+                });
+            },
             init: function () {
 
                 var LayerAreas = Parking.GetAreas(),
@@ -553,7 +518,6 @@
 
                 if (LayerAreas != 'Error' && LayerRoute != 'Error' && LayerCurrentLocation != 'Error' && LayerParkings != 'Error') {
                     Parking.MAP(LayerAreas, LayerRoute, LayerCurrentLocation, LayerParkings, Parking.LayerParkingsFree);
-
                 } else {
                     $("#map").html("Error");
                 }
@@ -573,11 +537,14 @@
             $('select').formSelect();
             $('.modal').modal();
             $('.modal').modal('open');
-
-
-
+            
+        
             $('#googleMaps').click(function () {
                 window.location.href = 'googlemaps.html?from=' + Parking.coordenadas.x1 + ',' + Parking.coordenadas.y1 + '&to=' + Parking.coordenadas.x2 + ',' + Parking.coordenadas.y2;
+            });
+
+            $("#ponto_interesse").change(function () {
+                Parking.getInterestedPoints();
             });
 
 
@@ -604,12 +571,8 @@
             document.getElementById(idTextArea).innerHTML = "Livres: " + lugares;
         }
 
-        alteraLugares("img_lugares1", 34, "text_lugares1", 12);
-        alteraLugares("img_lugares2", 91, "text_lugares2", 3);
-        alteraLugares("img_lugares3", 75, "text_lugares3", 8);
-
     </script>
-
+    <?php require_once("php/GetAreasOptions.php"); ?>
 </body>
 
 </html>
