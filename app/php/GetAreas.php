@@ -18,6 +18,7 @@ if (!$result) {
 
 $row = pg_fetch_row($result);
 
+
 echo json_encode($row[0]);
 
        

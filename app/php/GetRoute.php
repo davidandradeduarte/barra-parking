@@ -1,13 +1,10 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-$x1 = '-8.74376';
-$y1 = '40.63198';
-$x2 = '-8.74663';
-$y2 = '40.64044';
+$x1 = $_POST["x1"];
+$y1 = $_POST["y1"];
+$x2 = $_POST["x2"];
+$y2 = $_POST["y2"];
  //$geojson.='["-8.740374", "40.630780"],  [-8.74703452, 40.63910304]';
 
 $db_connection = pg_connect("host=localhost dbname=spatial_barra_parking user=root password=root");
@@ -18,7 +15,7 @@ $result = pg_query($db_connection, "SELECT  array_to_json(array_agg(feat)) As fe
 FROM (SELECT 'Feature' As type,
   ST_AsGeoJSON(b.geom_way)::json As geometry FROM pgr_dijkstra('
   SELECT id, source::integer, target::integer, cost::double precision, reverse_cost
-  FROM road_network_arches', findVertex('-8.74376', '40.63198'),array[findVertex('-8.746174', '40.640612')], true) a
+  FROM road_network_arches', findVertex('$x1', '$y1'),array[findVertex('$x2', '$y2')], true) a
   LEFT JOIN road_network_arches b ON (a.edge = b.id)) As feat");
 
 
