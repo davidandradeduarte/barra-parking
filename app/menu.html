@@ -23,7 +23,7 @@
                     <img class="logo" src="images/logo.png" />
                 </div>
                 <div class="col s10">
-                    <a class="logo_nome">Barra Parking</a>
+                    <a class="logo_nome">Gestão do Estacionamento</a>
                 </div>
                 <div class="col s1">
                     <ul id="nav-mobile" class="right">
@@ -37,70 +37,16 @@
     </nav>
     <main>
         <div class="textoTitulo">
-            <b>Pontos de Interesse</b>
+            <b>Centro de Gestão de Estacionamentos</b>
         </div>
         <div class="divider divisao"></div>
 
-        <div class="container">
+        <div class="container" style="margin: auto;">
             <div class="row">
-                <div class="col s2 m2"></div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Wood Sidewalk" src="images/y97vdLh.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Wood Sidewalk</p>
+                <div class="container center-align" id="infoParques">
+
+
                 </div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="ATM Post" src="images/3JEHn13.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">ATM Post</p>
-                </div>
-                <div class="col s2 m2"></div>
-            </div>
-            <div class="row">
-                <div class="col s2 m2"></div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Beach" src="images/g8MYBsX.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Beach</p>
-                </div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Bar" src="images/MbyU74I.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Bar</p>
-                </div>
-                <div class="col s2 m2"></div>
-            </div>
-            <div class="row">
-                <div class="col s2 m2"></div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Camping" src="images/Pj8xOTH.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Camping</p>
-                </div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Hotel" src="images/a79PoFL.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Hotel</p>
-                </div>
-                <div class="col s2 m2"></div>
-            </div>
-            <div class="row">
-                <div class="col s2 m2"></div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Lighthouse" src="images/TodSvRU.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Lighthouse</p>
-                </div>
-                <div class="col s4 m4">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Shop" src="images/1nnjKz2.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Shop</p>
-                </div>
-                <div class="col s2 m2"></div>
-            </div>
-            <div class="row">
-                <div class="col s2 m2"></div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="Restaurant" src="images/f1l7H81.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">Restaurant</p>
-                </div>
-                <div class="col s4 m4 point">
-                    <img class="tooltipped ponto" data-position="bottom" data-tooltip="School" src="images/LYmYJxb.png" />
-                    <p class="promo-caption hide-on-large-only textoIcones">School</p>
-                </div>
-                <div class="col s2 m2"></div>
             </div>
         </div>
     </main>
@@ -145,5 +91,77 @@
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 <script type="text/javascript" src="js/menu.js"></script>
+
+<script>
+
+
+    var Menu = {
+
+        init: function () {
+            Menu.CreateAreasParkingsFree();
+        },
+
+        CreateAreasParkingsFree: function () {
+            $.ajax({
+                url: "php/GetLabelParkingsFree.php",
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    var parseJSON = $.parseJSON(JSON.stringify(response));
+
+                    for (var i in parseJSON) {
+                        $("#infoParques").append(' <div class="col s12 m6 center-align">\
+                        <div class="z-depth-3" style="padding-left: 20px;padding-right: 20px; padding-top: 5px;padding-bottom: 5px; margin-bottom: 20px">\
+                            <div class="textoTitulo">\
+                                <b>'+ parseJSON[i].name + '</b>\
+                            </div>\
+                            <div style="align-content: center">\
+                                <img id="imagemLogo" class="responsive-img" src="images/logo.png" style="width: 35%; margin:auto" />\
+                                <div id="textoTitulo" style="color:grey">\
+                                    <h5>Lugares Livres</h5>\
+                                </div>\
+                                <div class="divider divisao"></div>\
+                                <div id="textoCorpo">\
+                                    <h4 class="textoTitulo" id="id_' + parseJSON[i].id + '">' + parseJSON[i].free_places + '</h4>\
+                                    </p>\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </div>');
+                    }
+                },
+                error: function (response) {
+                    Menu.toasts("Erro ao obter areas");
+                }
+            });
+        },
+        ReloadAreasParkingsFree: function () {
+            $.ajax({
+                url: "php/GetLabelParkingsFree.php",
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    var parse = $.parseJSON(JSON.stringify(response));
+
+                    for (var i in parse) {
+                        document.getElementById('id_' + parse[i].id).innerHTML = parse[i].free_places;
+                    }
+                },
+                error: function (response) {
+                    Menu.toasts("Erro ao obter pontos de interesse");
+                }
+            });
+        }
+    };
+
+    $(document).ready(function () {
+        Menu.init();
+        window.setInterval(function () {
+            Menu.ReloadAreasParkingsFree();
+        }, 1000);
+
+    });
+
+</script>
 
 </html>

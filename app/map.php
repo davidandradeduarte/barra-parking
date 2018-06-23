@@ -130,7 +130,7 @@
         <div id="modalOptions" class="modal-footer">
             <a id="modalButton" class="btn blue darken-3 modal-action">
                 <i class="material-icons white-text" style="margin-right: 10px;">directions_car</i>
-                <b style="font-size: 12px;">Obter Rota</b>
+                <b style="font-size: 12px; margin-right: 10px;">Obter Rota</b>
             </a>
         </div>
     </div>
@@ -152,36 +152,21 @@
     </div>
 
     <script>
-        var x1,y1,latFinal,longFinal;
+        var x1,y1,x2,y2,latFinal,longFinal;
         
         function getActualLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(definePosition);
             } else { 
-                alert("Geolocation is not supported by this browser!!");
+                Parking.toasts("Browser não suporta geolocalização");
             }
         }
         function definePosition(position) {
             x1 = position.coords.longitude;
             y1 = position.coords.latitude;
         }
-        getActualLocation();
+        //getActualLocation();
 
-        // Função para alterar parametros de informação dos lugares livres
-        function alteraLugares(idImageArea, percent, idTextArea, lugares) {
-            if (percent <= 35) {
-                document.getElementById(idImageArea).style.backgroundColor = "#1b5e20";
-            } else if (percent > 35 && percent <= 70) {
-                document.getElementById(idImageArea).style.backgroundColor = "#006064";
-            } else if (percent > 70 && percent <= 90) {
-                document.getElementById(idImageArea).style.backgroundColor = "#e65100";
-            } else if (percent > 90) {
-                document.getElementById(idImageArea).style.backgroundColor = "#b71c1c";
-            }
-            document.getElementById(idImageArea).style.width = percent;
-            document.getElementById(idTextArea).innerHTML = "Livres: " + lugares;
-        }
-        
         var Parking = {
             map: '',
             UserLocationInit: ["-8.7430099", "40.6317209"],
@@ -194,7 +179,7 @@
             LayerRoute:'',
             pos:0,
             toasts: function(texto){
-                alert(texto);
+                M.toast({html: texto, classes: 'rounded'});
             },
             GetRoute: function (x1, y1) {
                 var vectorLayer,
@@ -231,6 +216,11 @@
                             source: vectorSource,
                             style: Parking.StylesGeneric()
                         });
+
+                        x1 = coordenadas.x1;
+                        y1 = coordenadas.y1;
+                        x2 = coordenadas.x2;
+                        y2 = coordenadas.y2;
 
                         Parking.map.removeLayer(Parking.LayerRoute);
                         Parking.LayerRoute=vectorLayer;
@@ -601,6 +591,11 @@
                 Parking.map.removeLayer(Parking.LayerRoute);
                 Parking.map.removeLayer(Parking.StartEnd);
                 Parking.map.removeLayer(Parking.UserLocation);
+
+                x1=null;
+                x2=null;
+                y1=null;
+                y2=null;
             },
             getInterestedPoints: function(){
                 var data = {
@@ -636,11 +631,14 @@
 
                     },
                     error: function (response) {
-                        alert("Erro");
+                        Parking.toasts("Erro ao obter pontos de interesse");
                     }
                 });
             },
             init: function () {
+
+                Parking.verifyInPolygon();
+
                 var LayerAreas = Parking.GetAreas(),
                     LayerCurrentLocation = Parking.GetCurrentLocation(),
                     LayerParkings = Parking.GetParkings();
@@ -653,6 +651,59 @@
                     $("#map").html("Error");
                 }
 
+                Parking.CreateAreasParkingsFree();
+            },
+            CreateAreasParkingsFree: function () {
+                $.ajax({
+                    url: "php/GetLabelParkingsFree.php",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        var parseJSON = $.parseJSON(JSON.stringify(response));
+                    
+                        for(var i in parseJSON){
+                            $("#appendAreasSideNav").append('<div class="col s4"><input class="imgArea" type="image" src="' + parseJSON[i].img + '" style="width: 100%; height: 5%;" lat="40.642742948915' + parseJSON[i].id + '" long="-8.7449920082118' + parseJSON[i].id + '"/><b id="nomeArea" style="color: #757575; font-size: 11px;">' + parseJSON[i].name + '</b><div class="progress" style="margin-bottom: -10px; margin-top: -5px;"><div id="img_' + parseJSON[i].id + '" class="determinate" style="width: 100%"></div></div><b id="text_' + parseJSON[i].id + '" style="color: #757575; font-size: 11px;">Livres:</b></div>');
+                            $("#appendAreasModalImages").append('<li class="tab grey lighten-5"><a class="active grey lighten-5" href="#area' + parseJSON[i].id + '" style="height: 100px;"><img class="z-depth-3" src="' + parseJSON[i].img + '" style="border-radius: 5px;"></a></li>');
+                            $("#appendAreasModalChips").append('<div id="area' + parseJSON[i].id + '" class="cardContentAreas"><div id="chipNomeArea" class="chip z-depth-2"><b>' + parseJSON[i].name + '</b></div></div>');
+                        }
+                    },
+                    error: function (response) {
+                        Parking.toasts("Erro ao obter areas");
+                    }
+                });
+            },
+            verifyInPolygon: function(){
+                $.ajax({
+                    url: 'php/VerifyInPolygon.php',
+                    type: 'POST',
+                    data: { 
+                        'x': '-8.74519', 
+                        'y': '40.63789'
+                    },
+                    success: function (response) {
+                        alert(response);
+                    },
+                    error: function () {
+                        alert('Error');
+                    }
+                });
+            },
+            ReloadAreasParkingsFree: function () {
+                $.ajax({
+                    url: "php/GetLabelParkingsFree.php",
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        var parse = $.parseJSON(JSON.stringify(response));
+                    
+                        for(var i in parse){
+                            alteraLugares('img_' + parse[i].id, ((parse[i].free_places/parse[i].space)*100) , 'text_' + parse[i].id, parse[i].free_places);
+                        }
+                    },
+                    error: function (response) {
+                        Parking.toasts("Erro ao obter pontos de interesse");
+                    }
+                });
             }
         };
 
@@ -661,6 +712,7 @@
 
             window.setInterval(function () {
                 Parking.ReloadParkingsFree();
+                Parking.ReloadAreasParkingsFree();
             }, 1000);
 
             $('.fixed-action-btn').floatingActionButton();
@@ -671,11 +723,19 @@
             $('.modal').modal('open');
             
             $('#googleMapsAreas').click(function () {
-                window.location.href = 'googlemaps.html?from=' + x1 + ',' + y1 + '&to=' + Parking.coordenadas.x2 + ',' + Parking.coordenadas.y2;
+                if(x1 == null || x2 == null || y1 == null || y2 == null){
+                    M.toast({html: 'Trajeto não definido', classes: 'rounded'});
+                } else {
+                    window.open('googlemaps.html?from=' + x1 + ',' + y1 + '&to=' + x2 + ',' + y2,'_blank');
+                }
             });
 
             $('#googleMapsLocais').click(function () {
-                window.location.href = 'googlemaps.html?from=' + x1 + ',' + y1 + '&to=' + Parking.coordenadas.x2 + ',' + Parking.coordenadas.y2;
+                if(x1 == null || x2 == null || y1 == null || y2 == null){
+                    M.toast({html: 'Trajeto não definido', classes: 'rounded'});
+                } else {
+                    window.open('googlemaps.html?from=' + x1 + ',' + y1 + '&to=' + x2 + ',' + y2,'_blank');
+                }
             });
 
             $("#ponto_interesse").change(function () {
@@ -684,6 +744,8 @@
 
             $('#modalButton').click(function () {
                 Parking.GetRoute("-8.74376", "40.63198");
+                x1 = -8.74376;
+                y1 = 40.63198;
             });
 
             //SIMULAÇÃO BUTTONS
@@ -694,8 +756,11 @@
 
             $('#randomPosition').click(function () {
                 Parking.limparRota();
-                var array= Parking.getRandomInitPoint();
+                 var array= Parking.getRandomInitPoint();
+                /*Parking.ChangeUserPosition(Parking.getRandomInitPoint()); */
                 Parking.GetRoute(array[0], array[1]);
+                x1 = array[0];
+                y1 = array[1];
             });
 
             $('#limparRota').click(function () {
@@ -765,7 +830,7 @@
         });
 
     </script>
-    <?php require_once("php/GetAreasOptions.php"); ?>
+
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 <?php
-
+  $arrayJSON = array();
+  
   $db_connection = pg_connect("host=localhost dbname=spatial_barra_parking user=root password=root");
 
   $result1 = pg_query($db_connection,"select gvt.id from 
@@ -14,6 +15,14 @@
   }
 
     $num_rows1 = pg_num_rows($result1);
+
+    $array1['id'] = 1;
+    $array1['name'] = "Parque Fernão de Magalhães";
+    $array1['img'] = "images/area1.png";
+    $array1['space'] = 33;
+    $array1['free_places'] = $num_rows1;
+
+    array_push($arrayJSON,$array1);
 
   //-------------------------------------------------
 
@@ -30,6 +39,14 @@
 
   $num_rows2 = pg_num_rows($result2);
 
+  $array2['id'] = 2;
+  $array2['name'] = "Parque Fernandes Lavrador";
+  $array2['img'] = "images/area2.png";
+  $array2['space'] = 27;
+  $array2['free_places'] = $num_rows2;
+  
+  array_push($arrayJSON,$array2);
+
   //-------------------------------------------------
 
   $result3 = pg_query($db_connection,"select gvt.id from 
@@ -44,6 +61,14 @@
   }
 
   $num_rows3 = pg_num_rows($result3);
+
+  $array3['id'] = 3;
+  $array3['name'] = "Parque Ria Mar";
+  $array3['img'] = "images/area3.png";
+  $array3['space'] = 25;
+  $array3['free_places'] = $num_rows3;
+  
+  array_push($arrayJSON,$array3);
   
     //-------------------------------------------------
 
@@ -60,11 +85,13 @@
 
   $num_rows4 = pg_num_rows($result4);
 
-  $arrayReturn[] = $num_rows1;
-  $arrayReturn[] = $num_rows2;
-  $arrayReturn[] = $num_rows3;
-  $arrayReturn[] = $num_rows4;
+  $array4['id'] = 4;
+  $array4['name'] = "Parque Infante Dom Henrique";
+  $array4['img'] = "images/area3.png"; /* FAZER IMAGEM 4 */
+  $array4['space'] = 30;
+  $array4['free_places'] = $num_rows4;
+  
+  array_push($arrayJSON,$array4);
 
-  echo json_encode($arrayReturn);
-
+  echo json_encode($arrayJSON);
 ?>
