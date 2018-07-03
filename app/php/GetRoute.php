@@ -1,6 +1,5 @@
 <?php
 
-
 $x1 = $_POST["x1"];
 $y1 = $_POST["y1"];
 $x2 = $_POST["x2"];
@@ -9,16 +8,12 @@ $y2 = $_POST["y2"];
 
 $db_connection = pg_connect("host=localhost dbname=spatial_barra_parking user=root password=root");
 
-
-
-$result = pg_query($db_connection, "SELECT  array_to_json(array_agg(feat)) As features
+$result = pg_query($db_connection, "SELECT array_to_json(array_agg(feat)) As features
 FROM (SELECT 'Feature' As type,
   ST_AsGeoJSON(b.geom_way)::json As geometry FROM pgr_dijkstra('
   SELECT id, source::integer, target::integer, cost::double precision, reverse_cost
   FROM road_network_arches', findVertex('$x1', '$y1'),array[findVertex('$x2', '$y2')], true) a
   LEFT JOIN road_network_arches b ON (a.edge = b.id)) As feat");
-
-
 
 if (!$result) {
     echo "An error occurred.\n";
@@ -27,16 +22,9 @@ if (!$result) {
 
 $row = pg_fetch_row($result);
 
-
 $array = json_decode($row[0], true);
 
-
-
-
-
 $countI = count($array) - 1;
-
-
 
 $coordenadasLinha ='{"coordinates":[';
 
@@ -59,6 +47,5 @@ for($i=0;$i<$countI;$i++){
 $coordenadasLinha.= "]}";
 
 echo json_encode($coordenadasLinha);
-
-       
+     
 ?>

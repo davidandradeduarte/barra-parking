@@ -21,6 +21,8 @@
     $array1['img'] = "images/area1.png";
     $array1['space'] = 33;
     $array1['free_places'] = $num_rows1;
+    $array1['lat'] = "40.636194";
+    $array1['long'] = "-8.7462329";
 
     array_push($arrayJSON,$array1);
 
@@ -44,6 +46,8 @@
   $array2['img'] = "images/area2.png";
   $array2['space'] = 27;
   $array2['free_places'] = $num_rows2;
+  $array2['lat'] = "40.6406671";
+  $array2['long'] = "-8.7461818";
   
   array_push($arrayJSON,$array2);
 
@@ -67,6 +71,8 @@
   $array3['img'] = "images/area3.png";
   $array3['space'] = 25;
   $array3['free_places'] = $num_rows3;
+  $array3['lat'] = "40.6422116";
+  $array3['long'] = "-8.7440219";
   
   array_push($arrayJSON,$array3);
   
@@ -90,6 +96,8 @@
   $array4['img'] = "images/area3.png"; /* FAZER IMAGEM 4 */
   $array4['space'] = 30;
   $array4['free_places'] = $num_rows4;
+  $array4['lat'] = "40.6436591";
+  $array4['long'] = "-8.7448814";
   
   array_push($arrayJSON,$array4);
 

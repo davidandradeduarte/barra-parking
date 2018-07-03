@@ -6,8 +6,4 @@
     $res=file_get_contents($url_);
 
     echo json_encode($res);
-
-
-    
-
-  ?>
+?>

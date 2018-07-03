@@ -145,7 +145,7 @@
         </a>
         <ul class="hide-on-small-only">
             <li><a class="btn-floating light-blue darken-3 tooltipped" id="pontoseguinte" data-position="left" data-tooltip="Avançar Ponto"><i class="material-icons">arrow_forward</i></a></li>
-            <li><a class="btn-floating light-blue darken-3 tooltipped" id="escolherponto"  data-position="left" data-tooltip="Escolher Ponto"><i class="material-icons">location_on</i></a></li>
+            <li><a class="btn-floating light-blue darken-3 tooltipped" id="escolherponto" data-position="left" data-tooltip="Escolher Ponto"><i class="material-icons">location_on</i></a></li>
             <li><a class="btn-floating green darken-1 tooltipped" id="randomPosition" data-position="left" data-tooltip="Nova Rota"><i class="material-icons">autorenew</i></a></li>
             <li><a class="btn-floating red darken-1 tooltipped" id="limparRota" data-position="left" data-tooltip="Apagar Rota"><i class="material-icons">delete_forever</i></a></li>
         </ul>
@@ -157,7 +157,6 @@
         function getActualLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(definePosition);
-                Parking.toasts("Browser suporta geolocalização");
             } else { 
                 Parking.toasts("Browser não suporta geolocalização");
             }
@@ -170,7 +169,7 @@
 
         var Parking = {
             map: '',
-            UserLocationInit: ["-8.7435189", "40.6318864"],
+            UserLocationInit: ["-8.7430099", "40.6317209"],
             Projection: 'EPSG:4326',
             LayerParkingsFree: '',
             routeCoords:'',
@@ -178,19 +177,20 @@
             StartEnd:'',
             UserLocation:'',
             LayerRoute:'',
-            SetLocation:false,
             pos:0,
+            SetLocation:false,
             toasts: function(texto){
                 M.toast({html: texto, classes: 'rounded'});
             },
-            GetRoute: function (x2, y2) {
+            GetRoute: function (x1, y1) {
                 var vectorLayer,
                 coordenadas = {
-                    x1: "-8.7435189",
-                    y1: "40.6318864",
-                    x2: x2,
-                    y2: y2
+                    x1: x1,
+                    y1: y1,
+                    x2: "-8.746174",
+                    y2: "40.640612",
                 };
+
                 $.ajax({
                     url: 'php/GetRoute.php',
                     type: 'POST',
@@ -207,10 +207,12 @@
                             });
 
                         Parking.routeCoords = routeGeom.getCoordinates();
-                        Parking.routeLength = Parking.routeCoords.length;
+                        
+                        ength = Parking.routeCoords.length;
 
                         var vectorSource = new ol.source.Vector({
                             features: [routeFeature]
+
                         });
 
                         vectorLayer = new ol.layer.Vector({
@@ -436,6 +438,12 @@
 
             MAP: function (LayerAreas, Layer_CurrentLocation, LayerParkings, LayerParkingsFree) {
 
+                var viewGeneric = new ol.View({
+                    projection: Parking.Projection,
+                    center: [-8.74703452, 40.63910304],
+                    zoom: 16
+                })
+
                 Parking.map = new ol.Map({
                     layers: [
                         new ol.layer.Tile({
@@ -453,28 +461,22 @@
                         }),
                         zoom: false
                     }),
-                    view: new ol.View({
-                        extent:[-8.749842,40.630963,-8.734564,40.643892], // Test Location
-                        minZoom: 16, // Test Location
-                        projection : Parking.Projection, // OSM projection
-                        center : [-8.7435189, 40.6318864],
-                        zoom: 16
-                    })
+                    view: viewGeneric
                 });
 
                  // select interaction working on "click"
-                var selectClick = new ol.interaction.Select({
+                /*var selectClick = new ol.interaction.Select({
                     condition: ol.events.condition.click
-                });
+                });*/
 
-                var select = selectClick;  // ref to currently selected interaction
+                //var select = selectClick;  // ref to currently selected interaction
 
                 // select interaction working on "pointermove"
-                var selectPointerMove = new ol.interaction.Select({
+                /*var selectPointerMove = new ol.interaction.Select({
                     condition: ol.events.condition.pointerMove
-                });
+                });*/
 
-                var selectElement = 'click';
+                /*var selectElement = 'click';
 
                 var changeInteraction = function() {
                     if (select !== null) {
@@ -488,17 +490,17 @@
                             if(e.selected.length){
                                 
                                 //Verificar se e uma area e apresentar lugares livres (substituir pelo e.selected.length)
-                                M.toast({html: 'Ainda não disponível', classes: 'rounded', displayLength: 4000});   
+                                M.toast({html: 'Lugares livres: ' + e.selected.length, classes: 'rounded', displayLength: 4000});   
                             } 
                         }); 
                     }
-                };
+                };*/
 
                 /**
                 * onchange callback on the select element.
                 */
-                selectElement.onchange = changeInteraction;
-                changeInteraction();
+                /*selectElement.onchange = changeInteraction;
+                changeInteraction();*/
             },
 
            StylesGeneric: function () {
@@ -617,14 +619,14 @@
                             var apend = ''; 
                             try {
                                 apend = '<div class="col s4 m4">\
-                                    <input class="imgLocais" type="image" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference='+item.photos[0].photo_reference+'&key=AIzaSyAc5MYHz-Zj8kBZ43xaVG9DJOlgnKlzF68" style="width: 100%; height: 5%; border-radius: 5px;"  long="'+ item.geometry.location.lng +'" lat="'+ item.geometry.location.lat +'"/>\
-                                        <b id="sideNavNomeArea" style="color: #757575; font-size: 8px;">'+ item.name +'</b>\
+                                    <input class="imgLocais" type="image" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference='+item.photos[0].photo_reference+'&key=AIzaSyAc5MYHz-Zj8kBZ43xaVG9DJOlgnKlzF68" style="width: 100%; height: 5%;"  long="'+item.geometry.location.lng+'" lat="'+item.geometry.location.lat+'"/>\
+                                        <b id="sideNavNomeArea" style="color: #757575; font-size: 8px;">'+item.name+'</b>\
                                     </div>';
                             }
                             catch(error) {
                                 apend = '<div class="col s4 m4">\
-                                    <input class="imgLocais" type="image" src="images/nophoto.jpg" style="width: 100%; height: 5%; border-radius: 5px;" long="'+ item.geometry.location.lng +'" lat="'+ item.geometry.location.lat +'"/>\
-                                        <b id="sideNavNomeArea" style="color: #757575; font-size: 8px;">'+ item.name +'</b>\
+                                    <input class="imgLocais" type="image" src="images/nophoto.jpg" style="width: 100%; height: 5%;" long="'+item.geometry.location.lng+'" lat="'+item.geometry.location.lat+'"/>\
+                                        <b id="sideNavNomeArea" style="color: #757575; font-size: 8px;">'+item.name+'</b>\
                                     </div>';
                             }
                             $('#selectPontosInteresse').append(apend);
@@ -660,7 +662,7 @@
                         var parseJSON = $.parseJSON(JSON.stringify(response));
                     
                         for(var i in parseJSON){
-                            $("#appendAreasSideNav").append('<div class="col s6 m6"><input class="imgArea" type="image" src="' + parseJSON[i].img + '" style="width: 70%; height: 10%; border-radius: 5px;" lat="' + parseJSON[i].lat + '" long="' + parseJSON[i].long + '"/><b id="nomeArea" style="color: #757575; font-size: 11px;">' + parseJSON[i].name + '</b><div class="progress" style="margin-bottom: -10px; margin-top: -5px;"><div id="img_' + parseJSON[i].id + '" class="determinate" style="width: 100%"></div></div><b id="text_' + parseJSON[i].id + '" style="color: #757575; font-size: 11px;">Livres:</b></div>');
+                            $("#appendAreasSideNav").append('<div class="col s6 m6"><input class="imgArea" type="image" src="' + parseJSON[i].img + '" style="width: 70%; height: 10%;" lat="40.642742948915' + parseJSON[i].id + '" long="-8.7449920082118' + parseJSON[i].id + '"/><b id="nomeArea" style="color: #757575; font-size: 11px;">' + parseJSON[i].name + '</b><div class="progress" style="margin-bottom: -10px; margin-top: -5px;"><div id="img_' + parseJSON[i].id + '" class="determinate" style="width: 100%"></div></div><b id="text_' + parseJSON[i].id + '" style="color: #757575; font-size: 11px;">Livres:</b></div>');
                         }
                     },
                     error: function (response) {
@@ -723,9 +725,9 @@
             });
 
             $('#modalButton').click(function () {
-                Parking.GetRoute("-8.7460701", "40.6379942");
-                x2 = -8.7460701;
-                y2 = 40.6379942;
+                Parking.GetRoute("-8.74376", "40.63198");
+                x1 = -8.74376;
+                y1 = 40.63198;
             });
 
             //SIMULAÇÃO BUTTONS
@@ -739,46 +741,35 @@
                  var array= Parking.getRandomInitPoint();
                 /*Parking.ChangeUserPosition(Parking.getRandomInitPoint()); */
                 Parking.GetRoute(array[0], array[1]);
-                x2 = array[0];
-                y2 = array[1];
+                x1 = array[0];
+                y1 = array[1];
             });
-
-
-            Parking.map.on('click', function(evt) {
-                if(Parking.SetLocation){
-                    var coordinates = evt.coordinate;
-                    Parking.ChangeUserPosition(coordinates);
-                    Parking.SetLocation= false;
-                    $('#map').css('cursor', 'default');
-                }
-            });
-
-            $("#escolherponto").click(function() {
-                Parking.SetLocation= Parking.SetLocation? false:true;
-                $('#map').css('cursor', 'pointer');
-            });
-
 
             $('#limparRota').click(function () {
                 Parking.limparRota();
             });
 
-
             // AQUI INICIA PERCURSO DE AREAS
             $("#obterRotaAreas").click(function() {
                 Parking.limparRota();
-                Parking.GetRoute(longFinal, latFinal);
-                x2 = longFinal;
-                y2 = latFinal;
-                //alert(Parking.routeCoords[0] + " initial / " + Parking.routeCoords[Parking.routeLength -1] + " final");
+                 var array= [];
+                 array[0]= latFinal;
+                 array[1]= longFinal;
+                Parking.GetRoute(array[1], array[0]);
+                x1 = array[0];
+                y1 = array[1];
+
             });
 
             // AQUI INICIA PERCURSO DE LOCAIS
             $("#obterRotaLocais").click(function() {
                 Parking.limparRota();
-                Parking.GetRoute(longFinal, latFinal);
-                x2 = longFinal;
-                y2 = latFinal;
+                 var array= [];
+                 array[0]= latFinal;
+                 array[1]= longFinal;
+                Parking.GetRoute(array[1], array[0]);
+                x1 = array[0];
+                y1 = array[1];
             });
 
             // Reset Lat and Long
@@ -798,6 +789,24 @@
                 latFinal = $(this).attr('lat');
                 longFinal = $(this).attr('long');
             });
+
+
+
+            Parking.map.on('click', function(evt) {
+                if(Parking.SetLocation){
+                    var coordinates = evt.coordinate;
+                    Parking.ChangeUserPosition(coordinates);
+                    Parking.SetLocation= false;
+                    $('#map').css('cursor', 'default');
+                }
+            });
+
+            $("#escolherponto").click(function() {
+                Parking.SetLocation= Parking.SetLocation? false:true;
+                $('#map').css('cursor', 'pointer');
+            });
+
+
 
             // Get lat and long from places
             $(document).on("click",".imgLocais", function() {

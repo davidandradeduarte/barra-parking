@@ -223,12 +223,7 @@ $geojson= '{
     { "type": "Feature", "properties": { "id": 56970, "clazz": 0, "osm_id": 1357895412.0, "osm_name": null, "ref_count": 1, "restrictio": null }, "geometry": { "type": "Point", "coordinates": [ -8.7452523, 40.6415163 ] } },
     { "type": "Feature", "properties": { "id": 56971, "clazz": 0, "osm_id": 1357895425.0, "osm_name": null, "ref_count": 1, "restrictio": null }, "geometry": { "type": "Point", "coordinates": [ -8.745269, 40.6420771 ] } }
     ]
-    }
-    ';
-
+    }';
 
     echo json_encode($geojson);
-
-
-
 ?>

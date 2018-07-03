@@ -94,7 +94,6 @@
 
 <script>
 
-
     var Menu = {
 
         init: function () {
@@ -111,17 +110,17 @@
 
                     for (var i in parseJSON) {
                         $("#infoParques").append(' <div class="col s12 m6 center-align">\
-                        <div class="z-depth-3" style="padding-left: 20px;padding-right: 20px; padding-top: 5px;padding-bottom: 5px; margin-bottom: 20px">\
+                        <div class="z-depth-3" style="padding-left: 20px;padding-right: 20px; padding-top: 5px;padding-bottom: 5px; margin-bottom: 20px; border-radius: 25px">\
                             <div class="textoTitulo">\
-                                <b>'+ parseJSON[i].name + '</b>\
+                                <b style="font-size: 18px;">'+ parseJSON[i].name + '</b>\
                             </div>\
                             <div style="align-content: center">\
-                                <img id="imagemLogo" class="responsive-img" src="images/logo.png" style="width: 35%; margin:auto" />\
-                                <div id="textoTitulo" style="color:grey">\
-                                    <h5>Lugares Livres</h5>\
+                                <img id="imagemLogo" class="responsive-img" src="' + parseJSON[i].img + '" style="width: 35%; margin:auto; border-radius: 10px" />\
+                                <div id="textoTitulo" style="color:grey; margin-bottom: 10px;">\
+                                    <h6 style="font-size: 15px; margin-top: 25px;">Lugares Livres</h6>\
                                 </div>\
                                 <div class="divider divisao"></div>\
-                                <div id="textoCorpo">\
+                                <div id="textoCorpo" style="margin-top: -40px;">\
                                     <h4 class="textoTitulo" id="id_' + parseJSON[i].id + '">' + parseJSON[i].free_places + '</h4>\
                                     </p>\
                                 </div>\
