@@ -166,7 +166,6 @@
             x1 = position.coords.longitude;
             y1 = position.coords.latitude;
         }
-        //getActualLocation();
 
         var Parking = {
             map: '',
@@ -177,6 +176,8 @@
             routeLength:'',
             StartEnd:'',
             UserLocation:'',
+            UserLocationX:'-8.7435189',
+            UserLocationY:'40.6318864',
             LayerRoute:'',
             SetLocation:false,
             pos:0,
@@ -186,11 +187,12 @@
             GetRoute: function (x2, y2) {
                 var vectorLayer,
                 coordenadas = {
-                    x1: "-8.7435189",
-                    y1: "40.6318864",
+                    x1: Parking.UserLocationX,
+                    y1: Parking.UserLocationY,
                     x2: x2,
                     y2: y2
                 };
+
                 $.ajax({
                     url: 'php/GetRoute.php',
                     type: 'POST',
@@ -222,8 +224,9 @@
                         y1 = coordenadas.y1;
                         x2 = coordenadas.x2;
                         y2 = coordenadas.y2;
-
-                        Parking.map.removeLayer(Parking.LayerRoute);
+                        //Parking.limparRota();
+                        Parking.map.removeLayer(Parking.LayerRoute)
+                        Parking.map.removeLayer(Parking.StartEnd);
                         Parking.LayerRoute=vectorLayer;
                         Parking.map.addLayer(Parking.LayerRoute);
 
@@ -231,7 +234,7 @@
 
                         Parking.pos=0;
                         Parking.ChangeUserPosition(Parking.routeCoords[0]);
-
+                        Parking.map.getView().setCenter(Parking.routeCoords[0]);
                     },
                     error: function (response) {
                         Parking.toasts('Error');
@@ -259,13 +262,13 @@
                             scale: .7, opacity: 1,
                             rotateWithView: false, anchor: [0.5, 1],
                             anchorXUnits: 'fraction', anchorYUnits: 'fraction',
-                            src: 'http://raw.githubusercontent.com/jonataswalker/map-utils/master/images/marker.png'
+                            src: '/images/marker.png'
                         })),
                         zIndex: 5
                     })
                 });
 
-                  Parking.map.addLayer(Parking.StartEnd);
+                Parking.map.addLayer(Parking.StartEnd);
 
             },
             ChangeUserPosition: function(location){
@@ -293,6 +296,29 @@
                 });
                 
                 Parking.map.addLayer(Parking.UserLocation);
+                Parking.map.getView().setCenter(location);
+            },
+            ChangeUserPositionRoute: function(location){
+                Parking.map.removeLayer(Parking.UserLocationRoute);
+                    var routeGeom = new ol.geom.LineString(location),
+                        routeFeature = new ol.Feature({
+                            geometry: routeGeom
+                        });
+
+                    var vectorSource = new ol.source.Vector({
+                        features: [routeFeature]
+                    });
+
+                    Parking.UserLocationRoute = new ol.layer.Vector({
+                        source: vectorSource,
+                        style: new ol.style.Style({
+                                stroke: new ol.style.Stroke({
+                                    color: 'rgba(160, 160, 160, 1)',
+                                    width: 4
+                                })
+                            })
+                    });
+                Parking.map.addLayer(Parking.UserLocationRoute);
             },
             GetAreas: function () {
                 var vectorLayer;
@@ -451,7 +477,7 @@
                         attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
                             collapsible: false
                         }),
-                        zoom: false
+                        zoom: true
                     }),
                     view: new ol.View({
                         extent:[-8.749842,40.630963,-8.734564,40.643892], // Test Location
@@ -477,21 +503,23 @@
                 var selectElement = 'click';
 
                 var changeInteraction = function() {
-                    if (select !== null) {
-                        Parking.map.removeInteraction(select); 
-                    }
+                    if(Parking.SetLocation){
+                        if (select !== null) {
+                            Parking.map.removeInteraction(select); 
+                        }
 
-                    if (select !== null) {
-                        Parking.map.addInteraction(select);
+                        if (select !== null) {
+                            Parking.map.addInteraction(select);
 
-                        select.on('select', function(e) {
-                            if(e.selected.length){
-                                
-                                //Verificar se e uma area e apresentar lugares livres (substituir pelo e.selected.length)
-                                M.toast({html: 'Ainda não disponível', classes: 'rounded', displayLength: 4000});   
-                            } 
-                        }); 
-                    }
+                            select.on('select', function(e) {
+                                if(e.selected.length){
+                                    
+                                    //Verificar se e uma area e apresentar lugares livres (substituir pelo e.selected.length)
+                                    M.toast({html: 'Ainda não disponível', classes: 'rounded', displayLength: 4000});   
+                                } 
+                            }); 
+                        }
+                     }
                 };
 
                 /**
@@ -584,7 +612,7 @@
                 Parking.map.addLayer(Parking.LayerParkingsFree);
             },
             getRandomInitPoint: function () {
-                var arrayRandomPoints = [ ["-8.747053","40.636229"], ["-8.746198","40.640129"], ["-8.748012","40.643621"]],
+                var arrayRandomPoints = [["-8.747053","40.636229"],["-8.746198","40.640129"],["-8.74392","40.641366"],["-8.743023","40.638373"]],
                     randomPoint = arrayRandomPoints[Math.floor(Math.random() * arrayRandomPoints.length)];
                 return randomPoint;
             },
@@ -592,7 +620,8 @@
                 Parking.map.removeLayer(Parking.LayerRoute);
                 Parking.map.removeLayer(Parking.StartEnd);
                 Parking.map.removeLayer(Parking.UserLocation);
-
+                Parking.map.removeLayer(Parking.UserLocationRoute);
+                
                 x1=null;
                 x2=null;
                 y1=null;
@@ -730,14 +759,26 @@
 
             //SIMULAÇÃO BUTTONS
             $('#pontoseguinte').click(function () {
-                Parking.ChangeUserPosition(Parking.routeCoords[Parking.pos]);
-                Parking.pos++;
+                if(Parking.routeCoords != ""){
+                    if(Parking.pos < Parking.routeCoords.length ){
+                        var routeCoordinates = Parking.routeCoords.slice(0, Parking.pos+1);
+                        Parking.ChangeUserPositionRoute(routeCoordinates);
+                        Parking.ChangeUserPosition(Parking.routeCoords[Parking.pos]);
+                        var local = Parking.routeCoords[Parking.pos];
+                        Parking.UserLocationX=local[0];
+                        Parking.UserLocationY=local[1];
+
+                        Parking.pos++;    
+                    }else{
+                        Parking.toasts("Chegou ao seu destino!");
+                    }
+                }
             });
 
             $('#randomPosition').click(function () {
                 Parking.limparRota();
-                 var array= Parking.getRandomInitPoint();
-                /*Parking.ChangeUserPosition(Parking.getRandomInitPoint()); */
+                var array= Parking.getRandomInitPoint();
+                
                 Parking.GetRoute(array[0], array[1]);
                 x2 = array[0];
                 y2 = array[1];
@@ -746,23 +787,30 @@
 
             Parking.map.on('click', function(evt) {
                 if(Parking.SetLocation){
+
                     var coordinates = evt.coordinate;
                     Parking.ChangeUserPosition(coordinates);
+                    Parking.UserLocationX = coordinates[0];
+                    Parking.UserLocationY = coordinates[1];
+                    if(Parking.routeCoords!=''){
+                        Parking.map.removeLayer(Parking.LayerRoute);
+                        Parking.GetRoute(x2, y2);
+                        
+                    }
                     Parking.SetLocation= false;
                     $('#map').css('cursor', 'default');
                 }
             });
-
+           
             $("#escolherponto").click(function() {
                 Parking.SetLocation= Parking.SetLocation? false:true;
                 $('#map').css('cursor', 'pointer');
             });
 
-
             $('#limparRota').click(function () {
                 Parking.limparRota();
+                Parking.routeCoords="";
             });
-
 
             // AQUI INICIA PERCURSO DE AREAS
             $("#obterRotaAreas").click(function() {
@@ -770,7 +818,6 @@
                 Parking.GetRoute(longFinal, latFinal);
                 x2 = longFinal;
                 y2 = latFinal;
-                //alert(Parking.routeCoords[0] + " initial / " + Parking.routeCoords[Parking.routeLength -1] + " final");
             });
 
             // AQUI INICIA PERCURSO DE LOCAIS
